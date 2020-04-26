@@ -1,35 +1,100 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-		<title>Flow of birth and institution locations for Nobel Prize winners</title>
-	
-		<!-- D3.js -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-		
-		<!-- Google Fonts -->
-		<link href='https://fonts.googleapis.com/css?family=Lato:400,900' rel='stylesheet' type='text/css'>
-		
-		<style>
-			body {
-			  font-size: 12px;
-			  font-family: 'Lato', sans-serif;
-			  text-align: center;
-			  fill: #2B2B2B;
-			  cursor: default;
-			}
-			
-			@media (min-width: 600px) {
-				#chart{
-					font-size: 16px;
-				}
-			}
-		</style>
-	</head>
-	<body>
-	
-		<div id = "chart"></div>
-		<script src = "script.js"></script>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js'></script>
+  <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700' rel='stylesheet' type='text/css'>
+  
+  <style>
+    body {
+      font-family: "Libre Baskerville";
+      color: #444;
+    }
+    
+    a {
+      color: #444;
+    }
+    
+    .all {
+      width: 1090px;
+      margin: auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-top: 60px;
+    }
+    
+    .header svg {
+      width: 100%;
+      height: 500px;
+      margin: 40px 0;
+    }
+    .header h1 {
+      font-size: 64px;
+      margin-bottom: 0px;
+    }
+    .header .description {
+      margin: 20px auto;
+      width: 320px;
+      font-size: 18px;
+    }
+    
+    .content {
+      position: relative;
+    }
+    
+    .content svg {
+      position: absolute;
+      width: 900px;
+      height: 6200px;
+      top: 0;
+    }
+    
+    .years {
+      position: absolute;
+      top: 0;
+      text-align: center;
+    }
+    
+    .year {
+      font-size: 28px;
+    }
+    
+    .titles {
+      position: absolute;
+      top: 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    
+    /* blend options taken from visual cinnamon tutorial: http://www.visualcinnamon.com/2016/05/beautiful-color-blending-svg-d3.html */
+    /*Set isolate on the group element*/
+    .flower {
+      isolation: isolate;
+      cursor: pointer;
+    }  
+    /*Set blend mode on SVG element: e.g. screen, multiply*/
+    .flower circle, .legend circle { mix-blend-mode: multiply; }
+  </style>
+</head>
 
-  </body>
-</html>
+<body>
+  <div class='all'>
+    <div class='header'>
+      <h1>Nobel Flowers</h1>
+      <div class='description'>
+        <p>What are common trends in the careers of top researchers? Explore through this visualization of nobel laureates as flowers. </p>
+      </div>
+      <svg></svg>
+
+    </div>
+    <div class='content'>
+      <svg></svg>
+      <div class='years'></div>
+      <div class='titles'></div>
+    </div>
+  </div>
+</body>
+<script src="flowers.js"></script>
