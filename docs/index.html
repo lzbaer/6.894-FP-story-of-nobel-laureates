@@ -1,11 +1,55 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
+  <title> The-Stories-of-High-Achievers </title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./stylesheet.css">
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js'></script>
   <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700' rel='stylesheet' type='text/css'>
   
   <style>
+    .node {
+      cursor: pointer;
+    }
+    .node:hover {
+      stroke: #7E81AD;
+      stroke-width: 2px;
+      }
+    .node--leaf {
+      fill: white;
+    }
+    .label {
+      font: 12px "Skia", sans-serif;
+      text-anchor: middle;
+      font-weight: bold;
+    }
+    .legend1 {
+      font: 12px "Skia", sans-serif;
+      text-anchor: start;
+      font-weight: bold;
+    }
+    .legend2 {
+      font: 12px "Skia", sans-serif;
+      text-anchor: end;
+      font-weight: bold;
+    }
+    .label,
+    .node--root,
+    .node--leaf {
+      pointer-events: none;
+    }
+    
+    .axis path, .axis line {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2px;
+      shape-rendering: crispEdges;
+    }
+    .axis {
+      font: 12px "Skia", sans-serif;
+    }
+
     body {
       font-family: "Libre Baskerville";
       color: #444;
@@ -81,6 +125,27 @@
 </head>
 
 <body>
+  <div class="page">
+      <h1 class="center"> The Stories of High-Achievers </h1>
+      <h4> Ameneh Fadaie , Austin M Parker , & Lisa Baer | 6.894 : Interactive Data Visualization | MIT </h4>
+      <p> Final Project Milestone </p>
+      <hr/>
+    
+   <div class="page">
+      <div class="text">
+        <h3> Our Dataset </h3>
+        <p> - <b> Publication records </b> of Nobel laureates in <b> physics </b> , <b> chemistry </b> , and <b> medicine </b> from 1900-2016 </p>
+        <p> - <b> NOBEL awarded papers </b> in all categories: physics, chemistry, medicine, peace, economy, and literature. </p>
+        <p> - Include the laureate’s names, affiliation, published and prized year, laureates’ countries, their motivations, and their research. </P>
+    
+        <div class="page">
+      <div class="text">
+        <h3> Our Goal </h3>
+        <h4> * Determine what conditions and environments facilitate scientific creativity: </h4>
+        <p> Telling the story of each laureate individually <b> (Scrollytelling Visualization) </b>: </p>
+        <p> - Their motivations and personalities </p>
+          <p> - Their locations (Stay in their birth town or move) </p>
+          <p> - Solo research or collaborative? </p>
   <div class='all'>
     <div class='header'>
       <h1>Nobel Flowers</h1>
