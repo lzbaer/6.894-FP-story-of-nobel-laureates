@@ -1,0 +1,14 @@
+{
+  "name": "6d8f5f31f34864d6",
+  "main": "motivations.js",
+  "version": "210.0.0",
+  "homepage": "https://observablehq.com/d/6d8f5f31f34864d6",
+  "author": {
+    "name": "Austin Parker",
+    "url": "https://observablehq.com/@amparker"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4"
+  }
+}
