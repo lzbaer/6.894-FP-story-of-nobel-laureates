@@ -75,7 +75,6 @@ let randnum = (min,max) => Math.round( Math.random() * (max-min) + min );
 
 //Create an array of objects
 let our_data = Array({"name": "David J. Thouless", "numPublications": 51, "lastName": "Thouless", "field": ["physics"], "age": 82, "year": "2016"});
-// console.log(our_data)
 
 //create group and join our data to that group
 let group = svg.selectAll('g')
@@ -154,6 +153,19 @@ let leaves = group.selectAll('path.leaf')
       return 'translate(' + [cx, cy] +
         ')rotate(' + [d.angle] + ')';
     });
+
+let stem = group.append("rect")
+    .attr('fill', '#4AB56D')
+    .attr("width", 10)
+    .attr("height", function(d) {return d.age; })
+    .attr('stroke', '#555')
+    .attr("opacity", "0")
+    .attr('transform', function(d) {
+      var cx = flowerSize / 2 / flowerSizeScale(d.age) + 195;
+      var cy = flowerSize / 2 / flowerSizeScale(d.age) + flowerSize + 50;
+      return 'translate(' + [cx, cy] + ')';
+    });
+
 
 //square grid
 let grid = () =>{
@@ -235,7 +247,16 @@ let barChart = () => {
   
 }
 
-
+//bar cart
+let addStem = () => {
+    stem
+    .transition()
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "1")
+  
+}
 
 
 //waypoints scroll constructor
@@ -256,6 +277,7 @@ function scroll(n, offset, func1, func2){
 new scroll('div2', '75%', grid2, grid);
 new scroll('div4', '75%', divide, grid2);
 new scroll('div6', '75%', barChart, divide);
+new scroll('div7', '75%', addStem, barChart);
 
 
 
