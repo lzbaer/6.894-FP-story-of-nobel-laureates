@@ -1,6 +1,63 @@
 // Code Source: https://bl.ocks.org/baronwatts/raw/2a50ae537d7c46670aa5eb30254ef751/
 //svg
 let svg = d3.select("#viz");
+var strokeColor = '#444';
+var flowerSize = 200;
+
+var petalPaths = [[
+  'M0 0',
+  "C50 50 50 100 0 100",
+  "C-50 100 -50 50 0 0"
+],
+[
+  'M-35 0',
+  'C-25 25 25 25 35 0',
+  'C50 25 25 75 0 100',
+  'C-25 75 -50 25 -35 0'
+],
+[
+  'M0 0',
+  'C50 40 50 70 20 100',
+  'L0 85',
+  'L-20 100',
+  'C-50 70 -50 40 0 0'
+],
+[
+  'M0 0',
+  'C50 25 50 75 0 100',
+  'C-50 75 -50 25 0 0'
+]];
+var leaf = [
+  'M0 15',
+  'C15 40 15 60 0 75',
+  'C-15 60 -15 40 0 15'
+];
+
+var numPetalScale = d3.scaleQuantize()
+  .range(_.range(5, 15));
+var flowerSizeScale = d3.scaleLinear()
+  .range([.05, .5]);
+var petalScale = d3.scaleOrdinal()
+  .domain(['chemistry', 'medicine', 'physics', 'literature'])
+  .range(_.range(4));
+var petalColors = d3.scaleOrdinal()
+  .range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
+
+var indivPetalColors = d3.scaleOrdinal()
+  .range(['yellow', 'red', 'blue', 'purple']);
+
+// blur effect taken from visualcinnamon:
+// http://www.visualcinnamon.com/2016/05/real-life-motion-effects-d3-visualization.html
+var defs = svg.append("defs");
+defs.append("filter")
+  .attr("id", "motionFilter")   //Give it a unique ID
+  .attr("width", "300%")    //Increase the width of the filter region to remove blur "boundary"
+  .attr("height", "300%")
+  .attr("x", "-100%")       //Make sure the center of the "width" lies in the middle of the element
+  .attr("y", "-100%")
+  .append("feGaussianBlur") //Append a filter technique
+  .attr("in", "SourceGraphic")  //Perform the blur on the applied element
+  .attr("stdDeviation", "8 8"); //Do a blur of 8 standard deviations in the horizontal and vertical direction
 
 
 //svg width and height
@@ -17,166 +74,165 @@ let randnum = (min,max) => Math.round( Math.random() * (max-min) + min );
 
 
 //Create an array of objects
-let our_data = d3.range(20).map(i => 
-({ 'device': i < 5 ? 'ios' : 'android', 
-    'city': i < 3 ? 'San Diegan' : 'Out of towners', 
-    'age': randnum(25, 65)
-}));
-//console.log(our_data)
-//var flower_data = d3.json('flowerdata.json', function(laureates) { console.log(laureates); return laureates});
-//console.log(flower_data)
+let our_data = Array({"name": "David J. Thouless", "numPublications": 51, "lastName": "Thouless", "field": ["physics"], "age": 82, "year": "2016"});
+// console.log(our_data)
 
 //create group and join our data to that group
 let group = svg.selectAll('g')
   .data(our_data)
   .enter()
   .append("g")
-
+  .classed('flower', true)
+  .attr('transform', 'translate(' + 200 + ',' + 200 + ');')
+  .on('click', function(d) {
+      window.open('http://nobelprize.org/prizes/' + d.field[0] +  '/' + d.year + '/' + d.lastName);
+  });
 
 //create rectangles
-let rects = group.append("rect")
+let rects = group.append("circle")
 
+//petals
+let petals = group.selectAll('path.petal')
+    .data(function(d) {
+      // var numPetals = numPetalScale(d.numPublications);
+      var numPetals = 5;
+      var path = petalPaths[petalScale(d.field[0])];
+      return _.times(numPetals, function(i) {
+        return {
+          scale: flowerSizeScale(d.age),
+          angle: (360/numPetals) * i,
+          path: path,
+          field: d.field[0]
+        }
+      });
+    }).enter().append('path')
+      .classed('petal', true)
+    .attr('opacity', "0")
+    .attr('stroke', strokeColor)
+    .attr('stroke-width', function(d) {
+      return 2 / flowerSizeScale(d.age);
+    }).attr('fill', function(d) {
+        return petalColors(d.field) 
+    })
+    .attr('d', function(d) {return d.path.join(' ')})
+    .attr('transform', function(d) {
+      var cx = flowerSize / 2 / d.scale + 200;
+      var cy = flowerSize / 2 / d.scale + 150;
+      return 'translate(' + [cx, cy] +
+        ')rotate(' + [d.angle] + ')';
+    });
 
-//city data
-d3.selectAll('g')
-  .append("text")
-  .text( (d) => d["city"])
-  .attr("fill", "gray")
-  .attr("class", "city")
-  .attr("dx", -500)
+//leaves
+// draw the leaves
+let leaves = group.selectAll('path.leaf')
+    .data(function(d) {
+      var leaves = [];
+      if (1) {
+        leaves.push({
+          scale: flowerSizeScale(d.age),
+          angle: -120
+        });
+      }
+      if (1) {
+        leaves.push({
+          scale: flowerSizeScale(d.age),
+          angle: 120
+        });
+      }
+      return leaves;
+    }).enter().append('path')
+    .classed('leaf', true)
+    .attr('opacity', "0")
+    .attr('stroke', '#555')
+    .attr('stroke-width', function(d) {
+      return 2 / flowerSizeScale(d.age);
+    }).attr('fill', '#4AB56D')
+    .attr('d', leaf.join(' '))
+    .attr('transform', function(d) {
+      var cx = flowerSize / 2 / d.scale + 200;
+      var cy = flowerSize / 2 / d.scale + flowerSize + 100;
+      return 'translate(' + [cx, cy] +
+        ')rotate(' + [d.angle] + ')';
+    });
 
-
-
-//age data
-d3.selectAll('g')
-  .append("text")
-  .text( (d) => d["age"] )
-  .attr("fill", "#fff")
-  .attr("class", "age")
-  .attr("dx", -500)
-
-
-// square grid
+//square grid
 let grid = () =>{
   rects
     .transition()
     .delay((d, i) => 10 * i)
     .duration(600)
     .ease(d3.easeElastic)
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("rx", 5)
-    .attr("ry", 5)
-    .attr("x", (d, i) => i % column * spacing)
-    .attr("y", (d, i) => Math.floor(i / 10) % rows * spacing)
-    .attr("fill", (d, i) => (i < 40 ? "#394147" : "#99c125"))
+    .attr("width", 100)
+    .attr("height", 100)
+    //.attr("rx", "50%")
+    .attr("r", flowerSize/2)
+    .attr("cy", "50%")
+    .attr("x", (d, i) => 100 + i % column * spacing)
+    .attr("y", (d, i) => 100 + Math.floor(i / 10) % rows * spacing)
+    .attr("fill", (d) => { console.log(d); return petalColors(d.field[0]) } )
     .attr("opacity", "1")
-}
+    .style("filter", "url(#motionFilter)")
+    .attr('transform', function(d, i) {
+      return 'translate(' + [205, -100] + ')'});
+  var petal = petals.filter(function(d, i) { return i == 0 })
+    petal
+    .transition()
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "0")
+};
 
 
 
 //circle grid
 let grid2 = () =>{
-  rects
+    var petal = petals.filter(function(d, i) { return i == 0 })
+    petal
     .transition()
     .delay((d, i) => 10 * i)
     .duration(600)
-    .ease(d3.easeElastic)
-    .attr("width", 20)
-    .attr("height", 20)
-    .attr("rx", "50%")
-    .attr("ry", "50%")
-    .attr("x", (d, i) => i % column * spacing)
-    .attr("y", (d, i) => Math.floor(i / 10) % rows * spacing)
-    .attr("fill", (d, i) => (i < 8 ? "none" : "#99c125"))
+    .ease(d3.easeLinear)
+    .attr('opacity', "1");
+
+    var other_petals = petals.filter(function(d, i) { return i !== 0 })
+    other_petals
+    .transition()
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "0");
+
 }
 
 
 //divide
 let divide = () =>{
-  rects
+  //draw all flower petals
+  petals
     .transition()
     .delay((d, i) => 10 * i)
     .duration(600)
-    .ease(d3.easeElastic)
-    .attr("width", 10)
-    .attr("height", 10)
-    .attr("rx", 0)
-    .attr("ry", 0)
-    .attr("x", (d, i) => d['device'] == "ios" ? randnum(100, 150) :  randnum(300, 350))
-    .attr("y", (d, i) => i * 20)
-    .attr("fill", (d, i) => d['device'] == "ios" ? "#394147": "#99c125")
-    .attr("opacity", (d,i)=> i < 12 ? 1 : 0 )//only show 12 people
-
-
-
-    //age
-    d3.selectAll('text.age')
-      .transition()
-      .delay( (d,i) => 40*i ) 
-      .duration(900)
-      .ease(d3.easeElastic)
-      .attr("dx", -500)
-
-
-    //city
-    d3.selectAll('text.city')
-      .transition()
-      .delay( (d,i) => 40*i ) 
-      .duration(900)
-      .ease(d3.easeElastic)
-      .attr("dx", -500)
+    .ease(d3.easeLinear)
+    .attr('opacity', "1");
+  leaves
+    .transition()
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "0");
 }
-
-
-
 
 
 //bar cart
 let barChart = () => {
-  rects
-    .attr("rx", 0 )
-    .attr("ry", 0 )
+    leaves
     .transition()
-    .delay( (d,i) => 20*i ) 
-    .duration(900)
-    .ease(d3.easeElastic)//linear, quad, cubic, sin, exp, circle, elastic, back, bounce
-    .attr("x", (d,i) => 150 )
-    .attr("y", (d,i) => i * 17 )
-    .attr("width", (d,i) => d["age"])
-    .attr("height", (d,i) => 15)
-    .attr("fill", (d, i) => (i < 3 ? "#99c125" : "#394147"))
-    .attr("opacity", 1)
-    .attr("transform", "translate(0,0) rotate(0)")
-    .attr("opacity", (d,i)=> i < 12 ? 1 : 0 )//only show 12 people
-
-
-  //age text
-  d3.selectAll('text.age')
-    .transition()
-    .delay( (d,i) => 20*i ) 
-    .duration(900)
-    .ease(d3.easeElastic)
-    //align text right
-    .attr("text-anchor", "start")
-    .attr("dx", 160)
-    .attr("dy", (d,i)=> (i * 17) + 12)
-    .attr("opacity", (d,i)=> i < 12 ? 1 : 0 )//nly show 12 people
-
-
-
-  //city text
-  d3.selectAll('text.city')
-    .transition()
-    .delay( (d,i) => 20*i ) 
-    .duration(900)
-    .ease(d3.easeElastic)
-    //align text left
-    .attr("text-anchor", "end")
-    .attr("dx", 140)
-    .attr("dy", (d,i)=> (i * 17) + 12)
-    .attr("opacity", (d,i)=> i < 12 ? 1 : 0 )//only show 12 people
-
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "1")
+  
 }
 
 
@@ -198,7 +254,7 @@ function scroll(n, offset, func1, func2){
 
 //triger these functions on page scroll
 new scroll('div2', '75%', grid2, grid);
-new scroll('div4', '75%', divide, grid);
+new scroll('div4', '75%', divide, grid2);
 new scroll('div6', '75%', barChart, divide);
 
 
