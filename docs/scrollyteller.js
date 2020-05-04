@@ -243,7 +243,13 @@ let barChart = () => {
     .delay((d, i) => 10 * i)
     .duration(600)
     .ease(d3.easeLinear)
-    .attr('opacity', "1")
+    .attr('opacity', "1");
+    stem
+    .transition()
+    .delay((d, i) => 10 * i)
+    .duration(600)
+    .ease(d3.easeLinear)
+    .attr('opacity', "0");
   
 }
 
