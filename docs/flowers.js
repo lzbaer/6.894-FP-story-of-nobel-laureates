@@ -67,6 +67,7 @@ function getSelectedButtons(class_name){
         selected.push(buttons[i].id);
     };
   };
+  console.log(selected);
   return selected;
 };
 
@@ -293,7 +294,7 @@ function filterFunction(d, i, include, age_vals, pub_vals, year_vals, fieldsIncl
     && d.numPublications <= pub_vals[1]
     && d.year >= year_vals[0]
     && d.year <= year_vals[1]
-    && d.field[0].indexOf(fieldsInclude) >=0)
+    && fieldsInclude.indexOf(d.field[0]) >=0)
     { included = true; }
   else {included = false; }
 
