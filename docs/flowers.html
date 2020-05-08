@@ -4,9 +4,15 @@
   <title> The-Stories-of-High-Achievers </title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="./stylesheet.css">
+  <link rel="stylesheet"type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/jqueryui.min.css">
+  <link rel="stylesheet" type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/jquery-ui-slider-pips.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/app.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="test.css">
+  <link rel="stylesheet" type="text/css" href="slider.css"/>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js'></script>
-  <!--<link href='https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700' rel='stylesheet' type='text/css'>-->
+  <script src="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/js/jquery-plus-ui.min.js"></script>
+  <script src="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/js/jquery-ui-slider-pips.js"> </script>
   
   <style>
     .node {
@@ -53,6 +59,7 @@
     body {
       font-family: 'Open Sans', sans-serif;
       color: #444;
+      position: static;
     }
     
     a {
@@ -67,6 +74,9 @@
     .header {
       text-align: center;
       margin-top: 60px;
+      position: static;
+      display: block;
+
     }
     
     .header svg {
@@ -75,6 +85,9 @@
       margin: 40px 0;
     }
     .header h1 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
       font-size: 64px;
       margin-bottom: 0px;
     }
@@ -90,8 +103,8 @@
     
     .content svg {
       position: absolute;
-      width: 900px;
-      height: 6200px;
+      width: 1090px;
+      height: 23400px;
       top: 0;
     }
     
@@ -121,6 +134,7 @@
     .flower {
       isolation: isolate;
       cursor: pointer;
+      transition: transform 2s;
     }  
     /*Set blend mode on SVG element: e.g. screen, multiply*/
     .flower circle, .legend circle { mix-blend-mode: multiply; }
@@ -132,7 +146,7 @@
     bottom: -300px;
     }
     .button {
-    background-color: #4CAF50;
+    background-color: #808080;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -142,6 +156,70 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    }
+    .selected {
+      background-color: #4CAF50;
+    }
+
+.collapsible {
+  background-color: #444;
+  display: inline-block;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  font: 'Open Sans', sans-serif;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.collapsible:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.collapsed-content {
+  display: inline-block;
+  /*padding: 0 18px;*/
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #E8E8E8;
+}
+
+.collapsed-content h2 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+      font-size: 24px;
+      margin-bottom: 0px;
+      margin-left: 20px;
+      text-align: left;
+    }
+
+.collapsed-content h3 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+      font-size: 20px;
+      margin-bottom: 5px;
+      margin-top: 0px;
+      margin-left: 20px;
+    }
   </style>
 </head>
 
@@ -152,14 +230,52 @@
       <div class='description'>
         <p>What are common trends in the careers of top researchers? Explore through this visualization of nobel laureates as flowers. </p>
       </div>
-      <input id="year_button" type="button" class="button" value="Year">
-      <input id="numpubs_button" type="button" class="button" value="Number of Publications">
-      <input id="age_button" type="button" class="button" value="Age">
+      <div>
+        <button class="collapsible">Arrange Garden</button>
+        <div class="collapsed-content">
+          <!-- slider src: https://codepen.io/simeydotme/pen/mJLPPq?editors=1111 -->
+          <div style="height:90%">
+            <div style="float:left; width:50%;">
+              <h2>Filter:</h2>
+              <h3 style="margin-top:9px;text-align: top; float:left; width:20%; margin-bottom:0%; margin-left: 8%;">Age</h3>
+              <h3 style="margin-top:9px;text-align: top;float:left; width:20%; margin-bottom:0%;margin-left: 10%;">Number of Publications</h3>
+              <h3 style="margin-top:9px;text-align: top;float:left; width:20%; margin-bottom:5%;margin-left: 13%;">Year</h3>
+              <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-3" style="padding-top: 30px"></div>
+              <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-1" style="padding-top: 30px"></div>
+              <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-2" style="padding-top: 30px"></div>
+            </div>
+            <div style="float:left; width:50%;">
+              <div style="float:top; height:50%;">
+              <h2>Include:</h2>
+                <input id="chemistry" type="button" class="field_button toggle_button button selected" value="Chemistry">
+                <input id="medicine" type="button" class="field_button toggle_button button selected" value="Medicine">
+                <input id="physics" type="button" class="field_button toggle_button button selected" value="Physics">
+                <input id="literature" type="button" class="field_button toggle_button button selected" value="Literature">
+                <input id="peace" type="button" class="field_button toggle_button button selected" value="Peace">
+              </div>
+              <div style="float:top; height:50%;">
+              <h2>Order:</h2>
+                <h3>Value:</h3>
+                <input id="year" type="button" class="order_button button selected" value="Year" onclick="orderButton(this, 'order_button')">
+                <input id="numpubs" type="button" class="order_button button" value="Number of Publications" onclick="orderButton(this, 'order_button')">
+                <input id="age" type="button" class="order_button button" value="Age" onclick="orderButton(this, 'order_button')">
+                <h3 style="margin-top: 5px;">Direction:</h3>
+                <input id="ascend" type="button" class="dir_button button" value="Ascending" onclick="orderButton(this, 'dir_button')">
+                <input id="descend" type="button" class="dir_button button selected" value="Descending" onclick="orderButton(this, 'dir_button')">
+              </div>
+            </div>
+          </div>
+        <div style="float:left;width:100%;position:relative; text-align:center;height:10%">
+          <input id="go_button" type="button" class="button" style="color:#444;margin-bottom:2%;scale:1.25;background-color:#f5cc2a;" value="Go!" onclick="goButton()">
+          <!--
+          <img src="sun.png" style="width:10%; height:10%" onclick="window.open('flowers.html')"></img>
+          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);font-family: 'Open Sans', sans-serif;font-weight: bold;">Go</div>
+        -->
+        </div>
+      </div>
     </div>
     <div class='content'>
       <svg></svg>
-      <!--<div class='years'></div>
-      <div class='titles'></div>-->
     </div>
 
   <!--<div class="fixed"><svg id="viz" width="100%" height="100%"></svg></div>--> 
