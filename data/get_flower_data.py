@@ -66,12 +66,21 @@ def main():
 		for row in reader:
 			if row["Laureate Type"] != 'Individual':
 				continue
+			#filter out fields that are not science
+			if row["Category"].lower() not in ["chemistry", "medicine", "physics"]:
+				continue
 			laureate = dict()
 			laureate["name"] = row["Full Name"]
 			laureate["lastName"] = laureate["name"].split(' ')[-1]
 			laureate["field"] = [row["Category"].lower()]
 			laureate["year"] = row["Year"]
 			laureate["age"] = get_age(row["Birth Date"], row["Year"])
+			if laureate["age"] == 0:
+				print("Missing age for laureate {}".format(laureate["name"]))
+			if row["Birth Country"].lower() == row["Organization Country"].lower():
+				laureate["mobility"] = 0
+			else:
+				laureate["mobility"] = 1
 			#TODO: get actual number of publications
 			laureate["numPublications"] = random.randint(1, 100)
 

@@ -103,8 +103,8 @@
     
     .content svg {
       position: absolute;
-      width: 1090px;
-      height: 23400px;
+      width: 1200px;
+      height: 13700px;
       top: 0;
     }
     
@@ -140,10 +140,17 @@
     .flower circle, .legend circle { mix-blend-mode: multiply; }
     .fixed {
     position: fixed;
-    max-width: 500px;
-    height: 500px;
-    left: 30px;
+    max-width: 300px;
+    top:80px;
+    left: 10px;
     bottom: -300px;
+    }
+    .popupfixed {
+    position: fixed;
+    max-width: 300px;
+    height: 300px;
+    left: 300px;
+    bottom: 500px;
     }
     .button {
     background-color: #808080;
@@ -160,6 +167,47 @@
     .selected {
       background-color: #4CAF50;
     }
+
+.legend {
+  background-color: #0000FF;
+  display: inline-block;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  font: 'Open Sans', sans-serif;
+}
+
+.active, .legend:hover {
+  background-color: #555;
+}
+
+.legend:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.legend-content {
+  display: inline-block;
+  /*padding: 0 18px;*/
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #E8E8E8;
+  border-width: 2px;
+}
 
 .collapsible {
   background-color: #444;
@@ -232,7 +280,7 @@
       </div>
       <div>
         <button class="collapsible">Arrange Garden</button>
-        <div class="collapsed-content">
+        <div class="collapsed-content"> 
           <!-- slider src: https://codepen.io/simeydotme/pen/mJLPPq?editors=1111 -->
           <div style="height:90%">
             <div style="float:left; width:50%;">
@@ -240,7 +288,7 @@
               <h3 style="margin-top:9px;text-align: top; float:left; width:20%; margin-bottom:0%; margin-left: 8%;">Age</h3>
               <h3 style="margin-top:9px;text-align: top;float:left; width:20%; margin-bottom:0%;margin-left: 10%;">Number of Publications</h3>
               <h3 style="margin-top:9px;text-align: top;float:left; width:20%; margin-bottom:5%;margin-left: 13%;">Year</h3>
-              <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-3" style="padding-top: 30px"></div>
+              <div style="margin-top:30px;margin-bottom:40px;z-index: 0;" id="flat-slider-vertical-3" style="padding-top: 30px"></div>
               <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-1" style="padding-top: 30px"></div>
               <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-2" style="padding-top: 30px"></div>
             </div>
@@ -250,8 +298,10 @@
                 <input id="chemistry" type="button" class="field_button toggle_button button selected" value="Chemistry">
                 <input id="medicine" type="button" class="field_button toggle_button button selected" value="Medicine">
                 <input id="physics" type="button" class="field_button toggle_button button selected" value="Physics">
+                <!--
                 <input id="literature" type="button" class="field_button toggle_button button selected" value="Literature">
                 <input id="peace" type="button" class="field_button toggle_button button selected" value="Peace">
+                -->
               </div>
               <div style="float:top; height:50%;">
               <h2>Order:</h2>
@@ -267,18 +317,20 @@
           </div>
         <div style="float:left;width:100%;position:relative; text-align:center;height:10%">
           <input id="go_button" type="button" class="button" style="color:#444;margin-bottom:2%;scale:1.25;background-color:#f5cc2a;" value="Go!" onclick="goButton()">
-          <!--
-          <img src="sun.png" style="width:10%; height:10%" onclick="window.open('flowers.html')"></img>
-          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);font-family: 'Open Sans', sans-serif;font-weight: bold;">Go</div>
-        -->
         </div>
       </div>
     </div>
     <div class='content'>
-      <svg></svg>
+      <h3 id='texthowmany' style="text-align: left;transition:all 2s;">Displaying 549 out of 549 laureates</h3>
+      <svg style='z-index:10'></svg>
     </div>
-
-  <!--<div class="fixed"><svg id="viz" width="100%" height="100%"></svg></div>--> 
+  <div class="fixed">
+    <button class="collapsible legend" style="float: left; width: 40%; text-align: center; background-color: #81b7b8;position:relative;z-index:101">Legend</button>
+    <div id="legend" class="legend-content"><svg id="viz" width="100%" height="100%" style="margin-top:20px; margin-bottom:0px; max-height: 350px; position:relative;"></svg></div>
   </div>
+<!--
+  <div class="popupfixed"><svg id="viz" width="100%" height="100%" style="fill:blue"></svg></div>
+  </div>
+-->
 </body>
 <script src="flowers.js"></script>

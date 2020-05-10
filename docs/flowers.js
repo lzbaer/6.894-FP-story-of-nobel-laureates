@@ -81,33 +81,45 @@ for (i = 0; i < coll.length; i++) {
     var content = this.nextElementSibling;
     if (content.style.maxHeight){
       content.style.maxHeight = null;
+      if (content.id == "legend") {
+        $("#texthowmany").css("transform", "translate(0px, 0px)");
+        $("#flowerField").css("transform", "translate(10px, 10px)");
+        content.style.border = null;
+        //document.getElementsByClassName("fixed").css('z-index','-1');
+      }
     } else {
       content.style.maxHeight = (2*content.scrollHeight) + "px";
-    } 
+      if (content.id == "legend") {
+        $("#texthowmany").css("transform", "translate(210px, 0px)");
+        $("#flowerField").css("transform", "translate(150px, 10px)");
+        content.style.border = "solid";
+        //document.getElementsByClassName("fixed").css('z-index', '1');
+      }
+    }
   });
 };
 $("#flat-slider-vertical-1")
     .slider({
-        max: 99,
-        min: 0,
+        max: 1853,
+        min: 1,
         range: true,
-        values: [0, 99],
+        values: [1, 1853],
         orientation: "vertical"
     });
 $("#flat-slider-vertical-3")
     .slider({
-        max: 99,
-        min: 0,
+        max: 88,
+        min: 25,
         range: true,
-        values: [0, 99],
+        values: [25, 88],
         orientation: "vertical"
     });
 $("#flat-slider-vertical-2")
     .slider({
         max: 2016,
-        min: 1901,
+        min: 1902,
         range: true,
-        values: [1901, 2016],
+        values: [1902, 2016],
         orientation: "vertical"
   });
   $("#flat-slider-vertical-1, #flat-slider-vertical-2, #flat-slider-vertical-3")
@@ -120,11 +132,13 @@ $("#flat-slider-vertical-2")
 var strokeColor = '#444';
 var flowerSize = 200;
 var padding = 10;
-var legend = d3.select('.fixed svg');
+var legend = d3.select('.legend-content svg');
 
 var svg = d3.select('.content svg')
 	.style('left', '20px')
   .append('g')
+  .attr('id', 'flowerField')
+  .attr('style', 'transition:all 2s')
 	.attr('transform', 'translate(' + [padding, padding] + ')');
 
 svg
@@ -146,10 +160,9 @@ var petalPaths = [[
   "C-50 100 -50 50 0 0"
 ],
 [
-	'M-35 0',
-  'C-25 25 25 25 35 0',
-  'C50 25 25 75 0 100',
-  'C-25 75 -50 25 -35 0'
+  'M0 0',
+  'C50 25 50 75 0 100',
+  'C-50 75 -50 25 0 0'
 ],
 [
   'M0 0',
@@ -159,29 +172,43 @@ var petalPaths = [[
   'C-50 70 -50 40 0 0'
 ],
 [
-  'M0 0',
-  'C50 25 50 75 0 100',
-  'C-50 75 -50 25 0 0'
-]];
+  'M-35 0',
+  'C-25 25 25 25 35 0',
+  'C50 25 25 75 0 100',
+  'C-25 75 -50 25 -35 0'
+]
+];
+
+var petalPathsLegend = [
+  'M0 0 C50 50 50 100 0 100 C-50 100 -50 50 0 0',
+  'M0 0 C50 25 50 75 0 100 C-50 75 -50 25 0 0',
+  'M0 0 C50 40 50 70 20 100 L0 85 L-20 100 C-50 70 -50 40 0 0',
+  'M-35 0 C-25 25 25 25 35 0 C50 25 25 75 0 100 C-25 75 -50 25 -35 0'
+];
+
 var leaf = [
   'M0 15',
   'C15 40 15 60 0 75',
   'C-15 60 -15 40 0 15'
 ];
 
-var numPetalScale = d3.scaleQuantize()
-	.range(_.range(5, 15));
-// var flowerSizeScale = d3.scaleLinear()
-// 	.range([.05, .5]);
+// var numPetalScale = d3.scaleQuantize()
+// 	.range(_.range(5, 15));
+// var numPetalScale = d3.scaleQuantize()
+//  .range(_.range(5, 15));
+var numPetalScale = d3.scaleOrdinal()
+  .domain(["0-10", "10-100", "100-1000", "1000+"])
+  .range([3, 4, 5, 6]);
+
 var flowerSizeScale = 0.25;
 var petalScale = d3.scaleOrdinal()
-	.domain(['chemistry', 'medicine', 'physics', 'literature'])
+	.domain(['0-25', '25-50', '50-75', '75-100'])
 	.range(_.range(4));
-var petalColors = d3.scaleOrdinal()
-	.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
-
+//var petalColors = d3.scaleOrdinal()
+	//.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
+var petalColors = ["#ffda47", "#b187ff"];
 var indivPetalColors = d3.scaleOrdinal()
-  .range(['yellow', 'red', 'blue', 'purple']);
+  .range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
 
 // blur effect taken from visualcinnamon:
 // http://www.visualcinnamon.com/2016/05/real-life-motion-effects-d3-visualization.html
@@ -210,8 +237,40 @@ d3.json('flowerdata.json', function(laureates) {
       //laureate.ges = laureate.Genre.split(', ');
       //Age
       laureate.age = parseFloat(laureate.age);
+      if (laureate.age < 50) {
+        if (laureate.age < 25){
+          laureate.ageBucket = "0-25";
+        }
+        else{
+          laureate.ageBucket = "25-50";
+        }
+      }
+      else {
+        if (laureate.age < 75) {
+          laureate.ageBucket = "50-75";
+        }
+        else {
+          laureate.ageBucket = "75-100";
+        }
+      }
+
       //Number of publications
       laureate.numPublications = parseInt(laureate.numPublications);
+      if (laureate.numPublications < 10) {
+          laureate.numPubBucket = "0-10";
+      }
+      else if (laureate.numPublications < 100) {
+          laureate.numPubBucket = "10-100";
+      }
+      else if (laureate.numPublications < 1000) {
+          laureate.numPubBucket = "100-1000";
+      }
+      else {
+          laureate.numPubBucket = "1000+";
+      }
+
+      laureate.collaborate = parseInt(laureate.collaborate);
+      laureate.mobility = parseInt(laureate.mobility);
 
       return laureate;
     }).sortBy(function(laureate) {
@@ -221,10 +280,15 @@ d3.json('flowerdata.json', function(laureates) {
   // number of petals depending on number of publications
   var minPubs = d3.min(laureates, function(d) {return d.numPublications});
   var maxPubs = d3.max(laureates, function(d) {return d.numPublications});
-  numPetalScale.domain([minPubs, maxPubs]);
+  //numPetalScale.domain([minPubs, maxPubs]);
+  console.log("Min # pubs: " + minPubs);
+  console.log("Max # pubs: " + maxPubs);
   // overall flower size from rating
-  var minRating = d3.min(laureates, function(d) {return d.age});
-  var maxRating = d3.max(laureates, function(d) {return d.age});
+  var minAge = d3.min(laureates, function(d) {return d.age});
+  var maxAge = d3.max(laureates, function(d) {return d.age});
+  console.log("Min age: " + minAge);
+  console.log("Max age: " + maxAge);
+  console.log(laureates.length);
   // flowerSizeScale.domain([minRating, maxRating]);
   // get the top 4 genres by count
   topFields = _.chain(laureates)
@@ -234,7 +298,7 @@ d3.json('flowerdata.json', function(laureates) {
   	.takeRight(4)
   	.value();
   topFields.push('Other');
-  petalColors.domain(topFields);
+  //petalColors.domain(topFields);
   // get all the years
   var allYears = _.chain(laureates)
   	.map('year').uniq().value();
@@ -242,6 +306,177 @@ d3.json('flowerdata.json', function(laureates) {
   /*****************************************************
   ** build legend
   ******************************************************/
+
+  var fontSize = 12;
+  var legendWidth = 1000;
+  
+  console.log(legend);
+  // petal shapes
+  var legendPetalShapes = legend.append('g')
+    // .attr('transform', 'translate(' + (legendWidth / 2) + ',0)')
+    .selectAll('g')
+    .data(['0-25', '25-50', '50-75', '75-100'])
+    .enter().append('g')
+    .attr('transform', function(d, i) {
+      var x = i * (flowerSize / 3)+50;
+      return 'translate(' + [x, 0] + ')'
+    });
+  legendPetalShapes.append('path')
+    .attr('fill', 'none')
+    .attr('stroke', strokeColor)
+    .attr('stroke-width', 4)
+    .attr('d', function(rating) {
+      return petalPathsLegend[petalScale(rating)];
+    })
+    .attr('transform', 'scale(0.3)');
+  
+  legendPetalShapes.append('text')
+    .attr('y', flowerSize/4)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize + 'px')
+    .text(function(d) {return d });
+  
+  legendPetalShapes.append('text')
+    .attr('y', flowerSize/4 + 20)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize + 'px')
+    .text(function(d) {return "years old" });
+  
+  // petal colors
+  var legendPetalColors = legend.append('g')
+    .selectAll('g').data(["chemistry", "medicine", "physics"])
+    .enter().append('g')
+    .attr('transform', function(d, i) {
+      var x = i * (flowerSize / 3) + 75;
+      return 'translate(' + [x, flowerSize/4 + 40] + ')';
+    });
+    legendPetalColors.append('path')
+    .attr('fill', function(d, i) {return indivPetalColors(d) })
+    .attr('stroke', strokeColor)
+    .attr('stroke-width', 4)
+    .attr('d', petalPathsLegend[0])
+    .attr('transform', 'scale(0.3)');
+    // .attr('transform', function(d, i) {
+    //   var x = i * (flowerSize / 6) + 100;
+    //   return 'translate(' + [x, flowerSize] + ')scale(0.5)';
+    //});
+
+    legendPetalColors.append('text')
+    .attr('y', flowerSize/4)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize + 'px')
+    .text(function(d) {return d});
+
+  //background colors
+  var legendBgColors = legend.append('g')
+    // .attr('transform',
+   //        'translate(' + [legendWidth / 2, flowerSize * .9] + ')')
+    .selectAll('g').data(["same country", "migrated"])
+    .enter().append('g')
+    .attr('transform', function(d, i) {
+      var x = i * (flowerSize / 2-10) + 50;
+      return 'translate(' + [x, flowerSize/4 + 130] + ')';
+    });
+    legendBgColors.append('circle')
+    .attr('r', flowerSize / 8)
+    .attr('fill', function(d, i) {return petalColors[i]})
+    .style("filter", "url(#motionFilter)")
+    .attr("transform", "scale(0.5)");
+  
+  legendBgColors.append('text')
+    .attr('y', flowerSize/4-10)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize  + 'px')
+    .text(function(d) {return d});
+  
+  // number of petals in a flower
+  var legendNumPetals = legend.append('g')
+    // .attr('transform',
+    //       'translate(' + [legendWidth / 2, flowerSize * .9 * 2] + ')')
+    .selectAll('g')
+    .data(["0-10", "10-100", "100-1000", "1000+"]).enter().append('g')
+    .attr('transform', function(d, i) {
+      var x = i * (flowerSize/3 + 5) + 40;
+      return 'translate(' + [x, flowerSize/4 + 220] + ')scale(0.3)';
+    });
+  
+  legendNumPetals.selectAll('path')
+    .data(function(d) {
+      var numPetals = numPetalScale(d);
+      console.log(numPetals);
+      var path = petalPaths[0];
+      return _.times(numPetals, function(i) {
+        return {
+          angle: (360/numPetals) * i,
+          path: path
+        }
+      });
+    }).enter().append('path')
+    .attr('stroke', strokeColor)
+    .attr('stroke-width', 2 / .3)
+    .attr('fill', indivPetalColors("chemistry"))
+    .attr('d', function(d) {return d.path.join(' ')})
+    .attr('transform', function(d) {
+      return 'rotate(' + [d.angle] + ')';
+    });
+  
+  legendNumPetals.append('text')
+    .attr('y', flowerSize - 20)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize / .3 + 'px')
+    .text(function(d) {
+      return d;
+    });
+
+  legendNumPetals.append('text')
+    .attr('y', flowerSize + 30)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize / .3 + 'px')
+    .text("publications");
+
+  var legendLeaf = legend.append('g')
+    // .attr('transform', 'translate(' + (legendWidth / 2) + ',0)')
+    .selectAll('g')
+    .data(['shared prize'])
+    .enter().append('g')
+    .attr('transform', function(d, i) {
+      var x = 2 * (flowerSize / 2) + 30;
+      return 'translate(' + [x, flowerSize/4 + 140] + ')'
+    });
+  legendLeaf.selectAll('path')
+    .data(function(d) {
+      var leaves = [];
+        leaves.push({
+          scale: flowerSizeScale,
+          angle: -120
+        });
+        leaves.push({
+          scale: flowerSizeScale,
+          angle: 120
+        });
+      return leaves;
+    }).enter().append('path')
+    .attr('stroke', '#555')
+    .attr('stroke-width', function(d) {
+      return 2 / d.scale;
+    }).attr('fill', '#4AB56D')
+    .attr('d', leaf.join(' '))
+    .attr('transform', function(d) {
+      return 'rotate(' + [d.angle] + ')scale(0.3)';
+    });
+
+  legendLeaf.append('text')
+    .attr('y', flowerSize/4-20)
+    .attr('text-anchor', 'middle')
+    .attr('fill', strokeColor)
+    .style('font-size', fontSize + 'px')
+    .text("shared prize");
 
   /*****************************************************
   ** draw all flowers
@@ -349,6 +584,12 @@ function goButton() {
         ')scale(' + scale + ')';
     });
 
+    var size = flowers.filter((d, i) => filterFunction(d, i, true, age_vals, pub_vals, year_vals, fieldsInclude)).size();
+    var total = flowers.size();
+    console.log("Showing: " + size);
+    console.log("Total: " + total);
+    texthowmany.innerText = "Displaying " + size + " out of " + total + " laureates";
+
   //hide elements that were filtered out
   flowers
     .filter((d, i) => filterFunction(d, i, false, age_vals, pub_vals, year_vals, fieldsInclude))
@@ -387,7 +628,7 @@ function drawFlowers(svg, laureates) {
           cy: cy,
           scale: flowerSizeScale,
           angle: (360/d.field.length) * i,
-          fill: petalColors(field)
+          fill: petalColors[d.mobility]
         }
       });
     }).enter().append('circle')
@@ -404,9 +645,9 @@ function drawFlowers(svg, laureates) {
   // draw the flower petals
   flowers.selectAll('path.petal')
     .data(function(d) {
-      // var numPetals = numPetalScale(d.numPublications);
-      var numPetals = 5;
-      var path = petalPaths[petalScale(d.field[0])];
+      var numPetals = numPetalScale(d.numPubBucket);
+      // var numPetals = d.numPublications;
+      var path = petalPaths[petalScale(d.ageBucket)];
       return _.times(numPetals, function(i) {
         return {
           scale: flowerSizeScale,
@@ -422,7 +663,7 @@ function drawFlowers(svg, laureates) {
       return 2 / d.scale;
     //}).attr('fill', function(d, i) { if (i > 3) return "None"; return indivPetalColors(i) ; })
     }).attr('fill', function(d) {
-        return petalColors(d.field) 
+        return indivPetalColors(d.field) 
     })
     .attr('d', function(d) {return d.path.join(' ')})
     .attr('transform', function(d) {
@@ -450,13 +691,11 @@ function drawFlowers(svg, laureates) {
   flowers.selectAll('path.leaf')
     .data(function(d) {
       var leaves = [];
-      if (1) {
+      if (d.collaborate === 1) {
         leaves.push({
           scale: flowerSizeScale,
           angle: -120
         });
-      }
-      if (1) {
         leaves.push({
           scale: flowerSizeScale,
           angle: 120
