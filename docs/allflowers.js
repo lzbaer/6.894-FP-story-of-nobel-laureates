@@ -85,7 +85,7 @@ for (i = 0; i < coll.length; i++) {
         $("#texthowmany").css("transform", "translate(0px, 0px)");
         $("#flowerField").css("transform", "translate(10px, 10px)");
         content.style.border = null;
-        //document.getElementsByClassName("fixed").css('z-index','-1');
+        $(".fixed").css('z-index', -1);
       }
     } else {
       content.style.maxHeight = (2*content.scrollHeight) + "px";
@@ -93,7 +93,7 @@ for (i = 0; i < coll.length; i++) {
         $("#texthowmany").css("transform", "translate(210px, 0px)");
         $("#flowerField").css("transform", "translate(150px, 10px)");
         content.style.border = "solid";
-        //document.getElementsByClassName("fixed").css('z-index', '1');
+        $(".fixed").css('z-index', 1);
       }
     }
   });
