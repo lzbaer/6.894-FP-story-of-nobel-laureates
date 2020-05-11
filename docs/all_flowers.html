@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title> The-Stories-of-High-Achievers </title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./stylesheet.css">
+  <link rel="stylesheet"type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/jqueryui.min.css">
+  <link rel="stylesheet" type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/jquery-ui-slider-pips.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/css/app.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="modified_app_min.css">
+  <link rel="stylesheet" type="text/css" href="slider.css"/>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.js'></script>
+  <script src="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/js/jquery-plus-ui.min.js"></script>
+  <script src="https://simeydotme.github.io/jQuery-ui-Slider-Pips/dist/js/jquery-ui-slider-pips.js"> </script>
+  
+  <style>
+    .node {
+      cursor: pointer;
+    }
+    .node:hover {
+      stroke: #7E81AD;
+      stroke-width: 2px;
+      }
+    .node--leaf {
+      fill: white;
+    }
+    .label {
+      font: 12px 'Open Sans', sans-serif;
+      text-anchor: middle;
+      font-weight: bold;
+    }
+    .legend1 {
+      font: 12px 'Open Sans', sans-serif;
+      text-anchor: start;
+      font-weight: bold;
+    }
+    .legend2 {
+      font: 12px 'Open Sans', sans-serif;
+      text-anchor: end;
+      font-weight: bold;
+    }
+    .label,
+    .node--root,
+    .node--leaf {
+      pointer-events: none;
+    }
+    
+    .axis path, .axis line {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2px;
+      shape-rendering: crispEdges;
+    }
+    .axis {
+      font: 12px 'Open Sans', sans-serif;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+    }
+    
+    a {
+      color: #444;
+    }
+    
+    .all {
+      width: 1090px;
+      margin: auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-top: 60px;
+      position: static;
+      display: block;
+
+    }
+    
+    .header svg {
+      width: 100%;
+      height: 500px;
+      margin: 40px 0;
+    }
+    .header h1 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+      font-size: 64px;
+      margin-bottom: 0px;
+    }
+    .header .description {
+      margin: 20px auto;
+      width: 320px;
+      font-size: 18px;
+    }
+    
+    .content {
+      position: relative;
+    }
+    
+    .content svg {
+      position: absolute;
+      width: 1200px;
+      height: 23000px;
+      top: 0;
+    }
+    
+    .years {
+      position: absolute;
+      top: 0;
+      text-align: center;
+    }
+    
+    .year {
+      font-size: 28px;
+    }
+    
+    .titles {
+      position: absolute;
+      top: 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    
+    /* blend options taken from visual cinnamon tutorial: http://www.visualcinnamon.com/2016/05/beautiful-color-blending-svg-d3.html */
+    /*Set isolate on the group element*/
+    /*.flower:hover {
+      transform: scale(0.5);
+    }*/
+    .flower {
+      isolation: isolate;
+      cursor: pointer;
+      transition: transform 2s;
+    }  
+    /*Set blend mode on SVG element: e.g. screen, multiply*/
+    .flower circle, .legend circle { mix-blend-mode: multiply; }
+    .fixed {
+    position: fixed;
+    max-width: 300px;
+    top:80px;
+    left: 10px;
+    bottom: -300px;
+    }
+    .popupfixed {
+    position: fixed;
+    max-width: 300px;
+    height: 300px;
+    left: 300px;
+    bottom: 500px;
+    }
+    .button {
+    background-color: #808080;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    }
+    .selected {
+      background-color: #4CAF50;
+    }
+
+.legend {
+  background-color: #0000FF;
+  display: inline-block;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  font: 'Open Sans', sans-serif;
+}
+
+.active, .legend:hover {
+  background-color: #555;
+}
+
+.legend:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.legend-content {
+  display: inline-block;
+  /*padding: 0 18px;*/
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #E8E8E8;
+  border-width: 2px;
+}
+
+.collapsible {
+  background-color: #444;
+  display: inline-block;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  font: 'Open Sans', sans-serif;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.collapsible:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.collapsed-content {
+  display: inline-block;
+  /*padding: 0 18px;*/
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #E8E8E8;
+}
+
+.collapsed-content h2 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+      font-size: 24px;
+      margin-bottom: 0px;
+      margin-left: 20px;
+      text-align: left;
+    }
+
+.collapsed-content h3 {
+      font-family: 'Open Sans', sans-serif;
+      color: #444;
+      position: static;
+      font-size: 20px;
+      margin-bottom: 5px;
+      margin-top: 0px;
+      margin-left: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class='all'>
+    <div class='header'>
+      <h1>Nobel Flowers</h1>
+      <div class='description'>
+        <p>What are common trends in the careers of top thinkers? Explore through this visualization of nobel laureates as flowers. </p>
+        <p style="font-weight: bold"> Note: All flowers contain 5 petals (number of publications not shown)</p>
+        <p>View nobel laureates with publication records <a href=flowers.html>here</a></p>
+      </div>
+      <div>
+        <button class="collapsible">Arrange Garden</button>
+        <div class="collapsed-content"> 
+          <!-- slider src: https://codepen.io/simeydotme/pen/mJLPPq?editors=1111 -->
+          <div style="height:90%">
+            <div style="float:left; width:50%;">
+              <h2>Filter:</h2>
+              <h3 style="margin-top:9px;text-align: top; float:left; width:20%; margin-bottom:0%; margin-left: 25%;">Age</h3>
+              <h3 style="margin-top:9px;text-align: top;float:left; width:20%; margin-bottom:5%;margin-left: 13%;">Year</h3>
+              <div style="margin-top:30px;margin-bottom:40px;z-index: 0;" id="flat-slider-vertical-3" style="padding-top: 30px"></div>
+              <div style="margin-top:30px;margin-bottom:40px" id="flat-slider-vertical-2" style="padding-top: 30px"></div>
+            </div>
+            <div style="float:left; width:50%;">
+              <div style="float:top; height:50%;">
+              <h2>Include:</h2>
+                <input id="chemistry" type="button" class="field_button toggle_button button selected" value="Chemistry">
+                <input id="medicine" type="button" class="field_button toggle_button button selected" value="Medicine">
+                <input id="physics" type="button" class="field_button toggle_button button selected" value="Physics">
+                <input id="literature" type="button" class="field_button toggle_button button selected" value="Literature">
+                <input id="peace" type="button" class="field_button toggle_button button selected" value="Peace">
+                <input id="economics" type="button" class="field_button toggle_button button selected" value="Economics">
+              </div>
+              <div style="float:top; height:50%;">
+              <h2>Order:</h2>
+                <h3>Value:</h3>
+                <input id="year" type="button" class="order_button button selected" value="Year" onclick="orderButton(this, 'order_button')">
+                <input id="age" type="button" class="order_button button" value="Age" onclick="orderButton(this, 'order_button')">
+                <h3 style="margin-top: 5px;">Direction:</h3>
+                <input id="ascend" type="button" class="dir_button button" value="Ascending" onclick="orderButton(this, 'dir_button')">
+                <input id="descend" type="button" class="dir_button button selected" value="Descending" onclick="orderButton(this, 'dir_button')">
+              </div>
+            </div>
+          </div>
+        <div style="float:left;width:100%;position:relative; text-align:center;height:10%">
+          <input id="go_button" type="button" class="button" style="color:#444;margin-bottom:2%;scale:1.25;background-color:#f5cc2a;" value="Go!" onclick="goButton()">
+        </div>
+      </div>
+    </div>
+    <div class='content'>
+      <h3 id='texthowmany' style="text-align: left;transition:all 2s;">Displaying 923 out of 923 laureates</h3>
+      <svg style='z-index:10'></svg>
+    </div>
+  <div class="fixed">
+    <button class="collapsible legend" style="float: left; width: 40%; text-align: center; background-color: #81b7b8;position:relative;z-index:101">Legend</button>
+    <div id="legend" class="legend-content"><svg id="viz" width="100%" height="100%" style="margin-top:20px; margin-bottom:0px; max-height: 300px; position:relative;"></svg></div>
+  </div>
+</body>
+<script src="allflowers.js"></script>

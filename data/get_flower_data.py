@@ -2,6 +2,8 @@ import csv
 import json
 import re
 import random
+from fractions import Fraction
+import unicodedata
 
 # Number of publications
 # Different birth country
@@ -53,65 +55,94 @@ def get_pub_records(filename):
 			records[row["Prize year"]][row["Laureate ID"]]['papers'].append(row['Paper ID'])
 	return records
 
+
+def strip_accents(text):
+
+    try:
+        text = unicode(text, 'utf-8')
+    except NameError: # unicode is a default on python 3 
+        pass
+
+    text = unicodedata.normalize('NFD', text)\
+           .encode('ascii', 'ignore')\
+           .decode("utf-8")
+
+    return str(text)
+
+
 def main():
 	results = list()
 
-	pub_records = dict()
-	pub_records["medicine"] = get_pub_records('Medicine publication record.csv')
-	pub_records["physics"] = get_pub_records('Physics publication record.csv')
-	pub_records["chemistry"] = get_pub_records('Chemistry publication record.csv')
-
-	with open('archive.csv', newline='') as csvfile:
-		reader = csv.DictReader(csvfile, delimiter=',')
+	with open('archive_apiv2.json', newline='') as jsonfile:
+		reader = json.load(jsonfile)
+		reader = reader["laureates"]
 		for row in reader:
-			if row["Laureate Type"] != 'Individual':
-				continue
-			#filter out fields that are not science
-			if row["Category"].lower() not in ["chemistry", "medicine", "physics"]:
-				continue
-			laureate = dict()
-			laureate["name"] = row["Full Name"]
-			laureate["lastName"] = laureate["name"].split(' ')[-1]
-			laureate["field"] = [row["Category"].lower()]
-			laureate["year"] = row["Year"]
-			laureate["age"] = get_age(row["Birth Date"], row["Year"])
-			if laureate["age"] == 0:
-				print("Missing age for laureate {}".format(laureate["name"]))
-			if row["Birth Country"].lower() == row["Organization Country"].lower():
-				laureate["mobility"] = 0
-			else:
-				laureate["mobility"] = 1
-			#TODO: get actual number of publications
-			laureate["numPublications"] = random.randint(1, 100)
+			for prize in row["nobelPrizes"]:
+				#filter out fields that are not science
+				# if prize["category"]["en"].lower() not in ["chemistry", "physiology or medicine", "physics"]:
+				# 	continue
+				laureate = dict()
+				try:
+					laureate["name"] = row["knownName"]["en"]
+					laureate["href"] = row['links']['href']
+					if "familyName" in row:
+						laureate["lastName"] = strip_accents(row["familyName"]["en"]).replace("-", "").replace("'", "").replace(" ", "")
+					else:
+						laureate["lastName"] = strip_accents(laureate["name"].split()[-1])
+						print(laureate["lastName"])
+						print(laureate["name"])
+					laureate["normalized_name"] = strip_accents(laureate["name"])
 
-			#numPublications
-			# if laureate["field"] in pub_records:
-			# 	if laureate["year"] in pub_records[laureate["field"]]:
-			# 		field_winners_for_year = pub_records[laureate["field"]][laureate["year"]]
-			# 		if len(field_winners_for_year) == 1:
-			# 			laureate_dict = field_winners_for_year[list(field_winners_for_year.keys())[0]]
-			# 			laureate["numPublications"] = len(laureate_dict["papers"])
-			# 		else:
-			# 			laureate_names = [x["name"].split(',') for _,x in field_winners_for_year.items()]
-			# 			print(laureate_names)
-			# 			initials = ""
-			# 			for index, n in enumerate(laureate["name"].split(' ')):
-			# 				if index == len(laureate["name"].split(' ')) - 1:
-			# 					last_name = n
-			# 				else:
-			# 					initials += n[0]
-			# 			print("{}, {}".format(last_name, initials))
-			# 			exit(0)
-			# 			print(laureate["name"].split(' ')[-1].lower())
-			# 			print(laureate["name"].split(' '))
-			# 			if laureate["name"].split(' ')[-1].lower() in laureate_names:
-			# 				print('woo')
-			# 			exit()
+				except:
+					if "orgName" in row.keys():
+						continue
+					else:
+						print('Name issue')
+						print(row)
 
-			results.append(laureate)
+						raise
+				
+				category = prize["category"]["en"].lower()
+				if category == "physiology or medicine":
+					category = "medicine"
+				laureate["field"] = [category]
+				laureate["year"] = prize["awardYear"]
+				laureate["age"] = get_age(row["birth"]["date"], laureate["year"])
+				if laureate["age"] == 0:
+					print("Missing age for laureate {}".format(laureate["name"]))
+				birth_country = row["birth"]["place"]["country"]["en"].lower()
+				working_country = []
+				try:
+					if "affiliations" in prize.keys():
+						locations = prize["affiliations"]
+					elif "residences" in prize.keys():
+						locations = prize["residences"]
+					else:
+						print("Missing mobility value for {}".format(laureate["name"]))
+						# print(row)
+					for aff in locations:
+						if "country" in aff.keys():
+							working_country.append(aff["country"]["en"].lower())
+					countries = list(filter((birth_country).__ne__, working_country))
+				except:
+					print(row["nobelPrizes"])
+					print(row["nobelPrizes"][0].keys())
+					raise
 
+				if len(countries):
+					laureate["mobility"] = 1
+				else:
+					laureate["mobility"] = 0
+				if float(Fraction(row["nobelPrizes"][0]["portion"])) < 1:
+					laureate["collaborate"] = 1
+				else:
+					laureate["collaborate"] = 0
+
+				results.append(laureate)
+
+	print('completed')
 	# print results to json
-	with open('flowerdata.json', 'w') as json_file:
+	with open('allflowerdata.json', 'w') as json_file:
 		json.dump(results, json_file)
 
 main()
