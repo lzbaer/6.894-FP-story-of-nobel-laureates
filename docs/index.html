@@ -16,14 +16,16 @@
      height: 100%;
      padding: 0;
      scroll-behavior: smooth;
-     color: #666;
+     color: #444;
      font-family: 'Open Sans', sans-serif;
-     font-weight: 300;
   }
   h2{
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
+    font-size: 24px;
     line-height: 1.25;
-    padding-top: 45px;
-    font-weight: 300;
+    padding-top: 40px;
+    font-weight:500;
   }
   svg{
     padding: 20px;
@@ -87,27 +89,36 @@
       <h2>Let's begin by examining <strong>David J. Thouless</strong>, a 2016 nobel laureate awarded for his research in <italic>"theoretical discoveries of topological phase transitions and topological phases of matter"</italic>.</h2>
     </div>
     <div id="div1.5">
-      <h2>The <strong>background color</strong> represents the <strong>type of award</strong>.</h2>
-      <h2>Thouless was awarded for his contributions in <strong>Physics</strong>.</h2>
+      <h2>The <strong>background color</strong> represents <strong>mobility</strong>, which we define as whether the laureate won the award while researching in a different country from which they were born.</h2>
+      <p></p>
+      <h2>Thouless was born in the United Kingdom, and won the Nobel Prize while working at the University of Washington in Seattle, WA. This means that Thouless migrated. </h2>
     </div>
     <div id="div2">
-      <h2>The <strong>shape</strong> of the petal represents the <strong>mobility</strong> of the laureate. Thouless was born in the United Kingdom and conducted research in the United States. His mobility is <strong>X</strong>.</h2>
+      <h2>The <strong>shape</strong> of the petal represents the <strong>age</strong> of the laureate when they received the award. We divide age groups into four buckets: 0-25 years old, 25-50 years old, 50-75 years old, and 75-100 years old. The four petal shapes become increasingly pointy as the age bracket it represents increases. </h2>
+      <h2>Thouless was <strong> 82 years old</strong> when he won the Nobel Prize, so he belongs in the 75-100 year age bucket, represented by the pointiest petal shape. </h2>
+      <p></p>
+    </div>
+    <div id="div3">
+      <h2>The <strong>color</strong> of the petal represents the <strong>field</strong> in which the nobel laureate won the prize.</h2>
+      <h2>Thouless won the Nobel Prize in <strong>Physics</strong>. </h2>
       <p></p>
     </div>
     <div id="div4">
-      <h2>The <strong>number of petals</strong> represents the <strong>number of publications</strong> each laureate has published, up until receiving the award.</h2>
-      <h2>Thouless published <strong>X</strong> publications, so his flower has <strong>Y</strong> petals. </h2>
+      <h2>The <strong>number of petals</strong> represents the <strong>number of publications</strong> the laureate has published up until receiving the award.The number of petals range from 3 to 6 and the addition of a petal increases the number of publications logarithmically.</h2>
+      <h2>Thouless published <strong>143</strong> publications, so his flower has <strong>5</strong> petals. </h2>
     </div>
     <div id="div6">
       <h2><strong>Leaves</strong> represent <strong>collaboration</strong>, which we define as whether the laureate shared the prize. </h2>
       <h2>Thouless shared his award with <strong> F. Duncan M. Haldane</strong> and <strong>J. Michael Kosterlitz</strong>.</h2>
     </div>
+    <!--
     <div id="div7">
       <h2>The <strong>length of the stem</strong> represents <strong>age</strong>. The longer the stem, the older a laureate was when they received the award. </h2>
       <h2>Thouless was <strong> 82 years old</strong> when he won the Nobel Prize.</h2>
     </div>
+  -->
     <div id="div8">
-      <h2> If you'd like to learn more about <strong>David J. Thouless</strong>, click on his flower to learn more. </h2>
+      <h2> If you'd like to learn more about a laureate, you can <strong>click on their flower</strong> to learn more. </h2>
       <h2>Click the arrow to explore <strong>the flower field</strong> and learn about other nobel laureates.</h2>
       <!-- image src: https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngio.com%2Fimages%2Fpng-a1224319.html&psig=AOvVaw0gc6fCdwQPqcB9VQFGZTCi&ust=1588622230760000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMjF74-9mOkCFQAAAAAdAAAAABAD -->
       <img src="arrow.png" onclick="window.open('flowers.html')"></img>

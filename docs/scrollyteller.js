@@ -10,10 +10,9 @@ var petalPaths = [[
   "C-50 100 -50 50 0 0"
 ],
 [
-  'M-35 0',
-  'C-25 25 25 25 35 0',
-  'C50 25 25 75 0 100',
-  'C-25 75 -50 25 -35 0'
+  'M0 0',
+  'C50 25 50 75 0 100',
+  'C-50 75 -50 25 0 0'
 ],
 [
   'M0 0',
@@ -23,28 +22,45 @@ var petalPaths = [[
   'C-50 70 -50 40 0 0'
 ],
 [
-  'M0 0',
-  'C50 25 50 75 0 100',
-  'C-50 75 -50 25 0 0'
-]];
+  'M-35 0',
+  'C-25 25 25 25 35 0',
+  'C50 25 25 75 0 100',
+  'C-25 75 -50 25 -35 0'
+]
+];
 var leaf = [
   'M0 15',
   'C15 40 15 60 0 75',
   'C-15 60 -15 40 0 15'
 ];
 
-var numPetalScale = d3.scaleQuantize()
-  .range(_.range(5, 15));
+var numPetalScale = d3.scaleOrdinal()
+  .domain(["0-10", "10-100", "100-1000", "1000+"])
+  .range([3, 4, 5, 6]);
+
 var flowerSizeScale = d3.scaleLinear()
   .range([.05, .5]);
 var petalScale = d3.scaleOrdinal()
-  .domain(['chemistry', 'medicine', 'physics', 'literature'])
+  .domain(['0-25', '25-50', '50-75', '75-100'])
   .range(_.range(4));
-var petalColors = d3.scaleOrdinal()
+//var petalColors = d3.scaleOrdinal()
+  //.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
+var petalColors = ["#ffda47", "#b187ff"];
+var indivPetalColors = d3.scaleOrdinal()
+  .domain(["chemistry", "medicine", "physics"])
   .range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
 
-var indivPetalColors = d3.scaleOrdinal()
-  .range(['yellow', 'red', 'blue', 'purple']);
+// blur effect taken from visualcinnamon:
+// http://www.visualcinnamon.com/2016/05/real-life-motion-effects-d3-visualization.html
+var defs = svg.append("defs");
+defs.append("filter")
+  .attr("id", "motionFilter")   //Give it a unique ID
+  .attr("width", "300%")    //Increase the width of the filter region to remove blur "boundary"
+  .attr("x", "-100%")       //Make sure the center of the "width" lies in the middle of the element
+  .append("feGaussianBlur") //Append a filter technique
+  .attr("in", "SourceGraphic")  //Perform the blur on the applied element
+  .attr("stdDeviation", "8 8"); //Do a blur of 8 standard deviations in the horizontal and vertical direction
+
 
 // blur effect taken from visualcinnamon:
 // http://www.visualcinnamon.com/2016/05/real-life-motion-effects-d3-visualization.html
@@ -74,7 +90,21 @@ let randnum = (min,max) => Math.round( Math.random() * (max-min) + min );
 
 
 //Create an array of objects
-let our_data = Array({"name": "David J. Thouless", "numPublications": 51, "lastName": "Thouless", "field": ["physics"], "age": 82, "year": "2016"});
+let our_data = Array({
+        "field": [
+            "physics"
+        ],
+        "numPublications": 143,
+        "numPubBucket":"100-1000",
+        "ageBucket":'75-100',
+        "age": 82,
+        "normalized_name": "David J. Thouless",
+        "lastName": "Thouless",
+        "name": "David J. Thouless",
+        "mobility": 1,
+        "collaborate": 1,
+        "year": "2016"
+    });
 
 //create group and join our data to that group
 let group = svg.selectAll('g')
@@ -89,13 +119,26 @@ let group = svg.selectAll('g')
 
 //create rectangles
 let rects = group.append("circle")
+  .attr('cy', function(d) {return d.cy})
+  .attr('r', flowerSize / 2)
+  .attr('fill', function(d) {return d.fill})
+  .attr('transform', function(d) {
+    var x = flowerSize / 2 / d.scale;
+    var y = flowerSize / 2 / d.scale;
+    return 'translate(' + [x, y] +
+      ')rotate(' + d.angle + ')';
+  }).style("filter", "url(#motionFilter)");
 
 //petals
 let petals = group.selectAll('path.petal')
     .data(function(d) {
       // var numPetals = numPetalScale(d.numPublications);
-      var numPetals = 5;
-      var path = petalPaths[petalScale(d.field[0])];
+      var numPetals = numPetalScale(d.numPubBucket);
+      console.log(numPetals);
+      // var numPetals = d.numPublications;
+      console.log(d.ageBucket);
+      console.log(petalScale(d.ageBucket))
+      var path = petalPaths[petalScale(d.ageBucket)];
       return _.times(numPetals, function(i) {
         return {
           scale: flowerSizeScale(d.age),
@@ -111,12 +154,12 @@ let petals = group.selectAll('path.petal')
     .attr('stroke-width', function(d) {
       return 2 / flowerSizeScale(d.age);
     }).attr('fill', function(d) {
-        return petalColors(d.field) 
+        return indivPetalColors(d.field) 
     })
     .attr('d', function(d) {return d.path.join(' ')})
     .attr('transform', function(d) {
-      var cx = flowerSize / 2 / d.scale + 200;
-      var cy = flowerSize / 2 / d.scale + 150;
+      var cx = flowerSize / 2 / d.scale+200;
+      var cy = flowerSize / 2 / d.scale+150;
       return 'translate(' + [cx, cy] +
         ')rotate(' + [d.angle] + ')';
     });
@@ -144,7 +187,7 @@ let leaves = group.selectAll('path.leaf')
     .attr('opacity', "0")
     .attr('stroke', '#555')
     .attr('stroke-width', function(d) {
-      return 2 / flowerSizeScale(d.age);
+      return 2 / flowerSizeScale;
     }).attr('fill', '#4AB56D')
     .attr('d', leaf.join(' '))
     .attr('transform', function(d) {
@@ -161,8 +204,8 @@ let stem = group.append("rect")
     .attr('stroke', '#555')
     .attr("opacity", "0")
     .attr('transform', function(d) {
-      var cx = flowerSize / 2 / flowerSizeScale(d.age) + 195;
-      var cy = flowerSize / 2 / flowerSizeScale(d.age) + flowerSize + 50;
+      var cx = flowerSize / 2 / flowerSizeScale + 195;
+      var cy = flowerSize / 2 / flowerSizeScale + flowerSize + 50;
       return 'translate(' + [cx, cy] + ')';
     });
 
@@ -181,7 +224,7 @@ let grid = () =>{
     .attr("cy", "50%")
     .attr("x", (d, i) => 100 + i % column * spacing)
     .attr("y", (d, i) => 100 + Math.floor(i / 10) % rows * spacing)
-    .attr("fill", (d) => { console.log(d); return petalColors(d.field[0]) } )
+    .attr("fill", (d) => { console.log(d); return petalColors[d.mobility] } )
     .attr("opacity", "1")
     .style("filter", "url(#motionFilter)")
     .attr('transform', function(d, i) {
@@ -254,15 +297,15 @@ let barChart = () => {
 }
 
 //bar cart
-let addStem = () => {
-    stem
-    .transition()
-    .delay((d, i) => 10 * i)
-    .duration(600)
-    .ease(d3.easeLinear)
-    .attr('opacity', "1")
+// let addStem = () => {
+//     stem
+//     .transition()
+//     .delay((d, i) => 10 * i)
+//     .duration(600)
+//     .ease(d3.easeLinear)
+//     .attr('opacity', "1")
   
-}
+// }
 
 
 //waypoints scroll constructor
@@ -283,7 +326,7 @@ function scroll(n, offset, func1, func2){
 new scroll('div2', '75%', grid2, grid);
 new scroll('div4', '75%', divide, grid2);
 new scroll('div6', '75%', barChart, divide);
-new scroll('div7', '75%', addStem, barChart);
+//new scroll('div7', '75%', addStem, barChart);
 
 
 
