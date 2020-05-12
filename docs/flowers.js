@@ -17,6 +17,111 @@ function handleMouseOut(d, i) {
             ')scale(' + (scale) + ')';
           })
 }
+function handleClick(d, i, index) {
+  var popup = $('#flowerdetails');
+  if (popup.hasClass('open')) {
+    return;
+  }
+  else {
+    popup.addClass('open');
+    var flower_picked = d3.select(this);
+    var children = flower_picked.nodes().map(function(d) { return d.innerHTML; });
+    var flower_picked_data = flower_picked.data()[0]
+    var selected = d3.select('#flowerdetails').append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('margin-top', '20px')
+      .style('max-height', '350px')
+      .style('position', 'relative');
+
+    selected  
+      .append('rect')
+      .attr('width', '500px')
+      .attr('height', '300px')
+      .style('fill', '#E8E8E8')
+      .style('border', 'solid')
+      .style('stroke', 'black')
+      .on('click', function(d) {
+        popup.removeClass('open');
+        selected.remove(); 
+      });
+
+    selected
+      .append('g')
+      .attr('transform', 'translate(-100,-60)scale(0.5)')
+      .attr('id', 'test')
+      .on('click', function(d) { return window.open('http://nobelprize.org/prizes/' + flower_picked_data.field[0] +  '/' + flower_picked_data.year + '/' + flower_picked_data.lastName) } )
+      .html(children);
+
+    selected
+      .append('text')
+      .attr('transform', 'translate(200, 50)')
+      .text('Field: ' + flower_picked_data.field[0]);
+
+    /*
+      background-color: #4CAF50;
+  color: white;
+  border-radius: 50px 5px 5px 50px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  */
+    var button = selected.append('g').attr('transform', 'translate(200, 50)')
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (!flower_picked_data.mobility) return "#4EDFA5"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(100,-50)scale(2)');
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (flower_picked_data.mobility) return "#4EDFA5"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(120,150)rotate(180)scale(2)');
+
+      button.append('text')
+        .style('transform', 'translate(10px, 55px)')
+        .text('Migrated');
+      button.append('text')
+        .style('transform', 'translate(140px, 55px)')
+        .text('Stayed');
+
+    selected
+      .append('text')
+      .attr('transform', 'translate(200, 150)')
+      .text('Number of Publication: ' + flower_picked_data.numPublications);
+
+    button = selected.append('g').attr('transform', 'translate(200, 200)')
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (!flower_picked_data.collaborate) return "#4EDFA5"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(100,-100)scale(2)');
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (flower_picked_data.collaborate) return "#4EDFA5"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(120,100)rotate(180)scale(2)');
+
+      button.append('text')
+        .style('transform', 'translate(-5px, 5px)')
+        .text('Collaborated');
+      button.append('text')
+        .style('transform', 'translate(125px, 5px)')
+        .text('Independent');
+    
+    selected
+      .append('text')
+      .attr('transform', 'translate(200, 250)')
+      .text('Age: ' + flower_picked_data.age);
+  }
+}
 
 //field button toggle
 var fieldbuttons = document.getElementsByClassName("toggle_button");
@@ -612,9 +717,8 @@ function drawFlowers(svg, laureates) {
       var y = Math.floor(i / 5) * flowerSize * .62;
       return 'translate(' + [x, y] +
         ')scale(' + scale + ')';
-    }).on('click', function(d) {
-      window.open('http://nobelprize.org/prizes/' + d.field[0] +  '/' + d.year + '/' + d.lastName);
-    }).on("mouseover", handleMouseOver)
+    }).on('click', handleClick )
+    .on("mouseover", handleMouseOver)
     .on("mouseout", handleMouseOut);
   
   // create the data for each flower's colors

@@ -146,12 +146,12 @@
     bottom: -300px;
     z-index:-1;
     }
-    .popupfixed {
+    .popup {
     position: fixed;
-    max-width: 300px;
-    height: 300px;
-    left: 300px;
-    bottom: 500px;
+    max-width: 500px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index:-1;
     }
     .button {
     background-color: #808080;
@@ -271,6 +271,9 @@
       margin-top: 0px;
       margin-left: 20px;
     }
+.open {
+  z-index:10;
+}
   </style>
 </head>
 
@@ -327,10 +330,14 @@
     <div class='content'>
       <h3 id='texthowmany' style="text-align: left;transition:all 2s;">Displaying 549 out of 549 laureates</h3>
       <svg style='z-index:10'></svg>
+      <!--<div id='flowerdetails' style="width:200px; height:300px"></div>-->
     </div>
   <div class="fixed">
     <button class="collapsible legend" style="float: left; width: 40%; text-align: center; background-color: #81b7b8;position:relative;z-index:101">Legend</button>
     <div id="legend" class="legend-content"><svg id="viz" width="100%" height="100%" style="margin-top:20px; margin-bottom:0px; max-height: 350px; position:relative;"></svg></div>
+  </div>
+  <div class="fixed popup" id="flowerdetails">
+  </div>
   </div>
 <!--
   <div class="popupfixed"><svg id="viz" width="100%" height="100%" style="fill:blue"></svg></div>
