@@ -29,47 +29,62 @@ function handleClick(d, i, index) {
     var flower_picked_data = flower_picked.data()[0]
     var selected = d3.select('#flowerdetails').append('svg')
       .attr('width', '100%')
-      .attr('height', '100%')
-      .style('margin-top', '20px')
+      .attr('height', 'auto')
+      .style('margin-top', '0%')
+      //.attr('viewbox', '0 0 20 10')
+      // .style('margin-left', '5%')
+      // .style('margin-right', '5%')
+      // .style('margin-bottom', '5%')
       .style('max-height', '350px')
       .style('position', 'relative');
 
     selected  
       .append('rect')
-      .attr('width', '500px')
-      .attr('height', '300px')
+      .attr('width', '100%')
+      .attr('height', '90%')
       .style('fill', '#E8E8E8')
       .style('border', 'solid')
       .style('stroke', 'black')
+      .style('transform', 'translate(0px, 5px)')
       .on('click', function(d) {
         popup.removeClass('open');
         selected.remove(); 
       });
 
     selected
+      .append('text')
+      .attr('font-size', '25px')
+      .text(flower_picked_data.name)
+      .style('transform', 'translate(5%, 10%)');
+
+    var flowerdiv = selected.append('svg')
+      .attr('x', '50%')
+      .attr('y', '100%')
+      .style('transform', 'translate(-50%,-100%)');
+
+    flowerdiv
       .append('g')
-      .attr('transform', 'translate(-100,-60)scale(0.5)')
+      .style('transform', 'translate(-10%,-15%)scale(0.5)')
       .attr('id', 'test')
       .on('click', function(d) { return window.open('http://nobelprize.org/prizes/' + flower_picked_data.field[0] +  '/' + flower_picked_data.year + '/' + flower_picked_data.lastName) } )
       .html(children);
 
-    selected
+    flowerdiv
+      .select('g')
+      .select('text').remove();
+
+    var infosvg = selected.append('svg')
+      .attr('x', '50%')
+      .attr('y', '100%')
+      .style('width', '50%')
+      .style('transform', 'translate(-10%,-99%)');
+
+    infosvg
       .append('text')
-      .attr('transform', 'translate(200, 50)')
+      .style('transform', 'translate(5%, 15%)')
       .text('Field: ' + flower_picked_data.field[0]);
 
-    /*
-      background-color: #4CAF50;
-  color: white;
-  border-radius: 50px 5px 5px 50px;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  */
-    var button = selected.append('g').attr('transform', 'translate(200, 50)')
+    var button = infosvg.append('g').attr('transform', 'translate(50, 50)')
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
@@ -90,12 +105,12 @@ function handleClick(d, i, index) {
         .style('transform', 'translate(140px, 55px)')
         .text('Stayed');
 
-    selected
+    infosvg
       .append('text')
-      .attr('transform', 'translate(200, 150)')
+      .style('transform', 'translate(5%, 45%)')
       .text('Number of Publication: ' + flower_picked_data.numPublications);
 
-    button = selected.append('g').attr('transform', 'translate(200, 200)')
+    button = infosvg.append('g').attr('transform', 'translate(50, 200)')
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
@@ -116,10 +131,15 @@ function handleClick(d, i, index) {
         .style('transform', 'translate(125px, 5px)')
         .text('Independent');
     
+    infosvg
+      .append('text')
+      .style('transform', 'translate(5%, 75%)')
+      .text('Age: ' + flower_picked_data.age);
     selected
       .append('text')
-      .attr('transform', 'translate(200, 250)')
-      .text('Age: ' + flower_picked_data.age);
+      .style('font-size', '14px')
+      .style('transform', 'translate(2%, 87%)')
+      .text("Click anywhere in the box to close, or click the flower to learn more about this laureate");
   }
 }
 

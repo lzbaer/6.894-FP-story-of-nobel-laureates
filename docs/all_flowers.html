@@ -146,12 +146,18 @@
     bottom: -300px;
     z-index:-1;
     }
-    .popupfixed {
+    .popup {
+    top:50%;
     position: fixed;
-    max-width: 300px;
-    height: 300px;
-    left: 300px;
-    bottom: 500px;
+    max-width: 750px;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    left: 50%;
+    /*transform: translate(-50%, 0);*/
+    z-index:-1;
+    }
+    .open {
+      z-index:10;
     }
     .button {
     background-color: #808080;
@@ -329,5 +335,6 @@
     <button class="collapsible legend" style="float: left; width: 40%; text-align: center; background-color: #81b7b8;position:relative;z-index:101">Legend</button>
     <div id="legend" class="legend-content"><svg id="viz" width="100%" height="100%" style="margin-top:20px; margin-bottom:0px; max-height: 300px; position:relative;"></svg></div>
   </div>
+  <div class="popup" id="flowerdetails" style="min-width: 600px">
 </body>
 <script src="allflowers.js"></script>
