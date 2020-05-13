@@ -7,7 +7,7 @@
 
 [Application Homepage (MIT)](https://github.mit.edu/pages/6894-sp20/FP-The-Stories-of-High-Achievers)
 
-[Public Application Homepage (public)](https://github.mit.edu/pages/6894-sp20/FP-The-Stories-of-High-Achievers)
+[Application Homepage (public)](https://lzbaer.github.io/6.894-FP-story-of-nobel-laureates/)
 
 ## Summary Image
 
