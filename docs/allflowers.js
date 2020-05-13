@@ -18,126 +18,6 @@ function handleMouseOut(d, i) {
           })
 }
 
-function handleClick(d, i, index) {
-  var popup = $('#flowerdetails');
-  if (popup.hasClass('open')) {
-    return;
-  }
-  else {
-    popup.addClass('open');
-    var flower_picked = d3.select(this);
-    var children = flower_picked.nodes().map(function(d) { return d.innerHTML; });
-    var flower_picked_data = flower_picked.data()[0]
-    var selected = d3.select('#flowerdetails').append('svg')
-      .attr('width', '100%')
-      .attr('height', 'auto')
-      .style('margin-top', '0%')
-      //.attr('viewbox', '0 0 20 10')
-      // .style('margin-left', '5%')
-      // .style('margin-right', '5%')
-      // .style('margin-bottom', '5%')
-      .style('max-height', '350px')
-      .style('position', 'relative');
-
-    selected  
-      .append('rect')
-      .attr('width', '100%')
-      .attr('height', '90%')
-      .style('fill', '#E8E8E8')
-      .style('border', 'solid')
-      .style('cursor', 'pointer')
-      .style('stroke', 'black')
-      .style('transform', 'translate(0px, 5px)')
-      .on('click', function(d) {
-        popup.removeClass('open');
-        selected.remove(); 
-      });
-
-    selected
-      .append('text')
-      .attr('font-size', '25px')
-      .text(flower_picked_data.name)
-      .style('transform', 'translate(5%, 10%)');
-
-    var flowerdiv = selected.append('svg')
-
-    flowerdiv
-      .append('g')
-      .style('transform', 'translate(-10%,-15%)scale(0.5)')
-      .style('cursor', 'pointer')
-      .attr('id', 'test')
-      .on('click', function(d) { return window.open('http://nobelprize.org/prizes/' + flower_picked_data.field[0] +  '/' + flower_picked_data.year + '/' + flower_picked_data.lastName) } )
-      .html(children);
-
-    flowerdiv
-      .select('g')
-      .select('text').remove();
-
-    var infosvg = selected.append('svg')
-      .append('g')
-      .attr('width', '50%')
-      .style('transform', 'translate(40%)');
-
-    infosvg
-      .append('text')
-      .style('transform', 'translate(5%, 15%)')
-      .text('Field: ' + flower_picked_data.field[0]);
-
-    var button = infosvg.append('g').attr('transform', 'translate(50, 50)')
-      button
-      .append('path')
-      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (!flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
-      .attr('stroke', "black")
-      .attr('transform', 'translate(100,-50)scale(2)');
-      button
-      .append('path')
-      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
-      .attr('stroke', "black")
-      .attr('transform', 'translate(120,150)rotate(180)scale(2)');
-
-      button.append('text')
-        .style('transform', 'translate(10px, 55px)')
-        .text('Migrated');
-      button.append('text')
-        .style('transform', 'translate(140px, 55px)')
-        .text('Stayed');
-
-    infosvg
-      .append('text')
-      .style('transform', 'translate(5%, 45%)')
-      .text('Age: ' + flower_picked_data.age);
-
-    button = infosvg.append('g').attr('transform', 'translate(50, 200)')
-      button
-      .append('path')
-      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (!flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
-      .attr('stroke', "black")
-      .attr('transform', 'translate(100,-100)scale(2)');
-      button
-      .append('path')
-      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
-      .attr('stroke', "black")
-      .attr('transform', 'translate(120,100)rotate(180)scale(2)');
-
-      button.append('text')
-        .style('transform', 'translate(-5px, 5px)')
-        .text('Shared Prize');
-      button.append('text')
-        .style('transform', 'translate(135px, 5px)')
-        .text('Individual');
-
-    selected
-      .append('text')
-      .style('font-size', '14px')
-      .style('transform', 'translate(2%, 87%)')
-      .text("Click anywhere in the box to close, or click the flower to learn more about this laureate");
-  }
-}
-
 //field button toggle
 var fieldbuttons = document.getElementsByClassName("toggle_button");
 var i;
@@ -187,7 +67,6 @@ function getSelectedButtons(class_name){
         selected.push(buttons[i].id);
     };
   };
-  console.log(selected);
   return selected;
 };
 
@@ -210,7 +89,6 @@ for (i = 0; i < coll.length; i++) {
     } else {
       content.style.maxHeight = (2*content.scrollHeight) + "px";
       if (content.id == "legend") {
-        console.log($(window).width());
         if ($(window).width() > 980) {
           $("#texthowmany").css("transform", "translate(10%, 0px)");
           $("#flowerField").css("transform", "translate(10%, 10px)");
@@ -325,10 +203,6 @@ var leaf = [
   'C-15 60 -15 40 0 15'
 ];
 
-// var numPetalScale = d3.scaleQuantize()
-// 	.range(_.range(5, 15));
-// var numPetalScale = d3.scaleQuantize()
-//  .range(_.range(5, 15));
 var numPetalScale = d3.scaleOrdinal()
   .domain(["0-10", "10-100", "100-1000", "1000+"])
   .range([3, 4, 5, 6]);
@@ -337,8 +211,7 @@ var flowerSizeScale = 0.25;
 var petalScale = d3.scaleOrdinal()
 	.domain(['0-25', '25-50', '50-75', '75-100'])
 	.range(_.range(4));
-//var petalColors = d3.scaleOrdinal()
-	//.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
+
 var petalColors = ["none", "#6e6b6a"];
 var indivPetalColors = d3.scaleOrdinal()
   .domain(["chemistry", "medicine", "physics", "literature", "peace", "economics"])
@@ -357,6 +230,158 @@ defs.append("filter")
 
 //var topFields;
 var laureate_data;
+
+  /*****************************************************
+** construct popup (handleclick)
+******************************************************/
+function handleClick(d, i, index) {
+  var popup = $('#flowerdetails');
+  if (popup.hasClass('open')) {
+    return;
+  }
+  else {
+    popup.addClass('open');
+    var flower_picked = d3.select(this);
+    var children = flower_picked.nodes().map(function(d) { return d.innerHTML; });
+    var flower_picked_data = flower_picked.data()[0]
+    var selected = d3.select('#flowerdetails').append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('margin-top', '0%')
+      //.attr('viewbox', '0 0 20 10')
+      // .style('margin-left', '5%')
+      // .style('margin-right', '5%')
+      // .style('margin-bottom', '5%')
+      .style('max-height', '350px')
+      .style('position', 'relative');
+
+    selected  
+      .append('rect')
+      .attr('width', '100%')
+      .attr('height', '90%')
+      .style('fill', '#E8E8E8')
+      .style('border', 'solid')
+      .style('stroke', 'black')
+      .style('cursor', 'pointer')
+      .style('transform', 'translate(0px, 5px)')
+      .on('click', function(d) {
+        popup.removeClass('open');
+        selected.remove(); 
+      });
+
+    selected
+      .append('text')
+      .attr('font-size', '25px')
+      .text(flower_picked_data.name)
+      .style('transform', 'translate(5%, 10%)');
+
+    var flowerdiv = selected.append('svg')
+      //.attr('x', '50%')
+      //.attr('y', '100%')
+      //.style('transform', 'translate(-50%,-100%)');
+
+    flowerdiv
+      .append('g')
+      .style('transform', 'translate(-10%,-15%)scale(0.5)')
+      .style('cursor', 'pointer')
+      .attr('id', 'test')
+      .on('click', function(d) { return window.open('http://nobelprize.org/prizes/' + flower_picked_data.field[0] +  '/' + flower_picked_data.year + '/' + flower_picked_data.lastName) } )
+      .html(children);
+
+    flowerdiv
+      .select('g')
+      .select('text').remove();
+
+    var infosvg = selected.append('svg')
+      .append('g')
+      .attr('width', '50%')
+      .style('transform', 'translate(40%,5%)');
+
+    var fieldg = infosvg
+      .append('g')
+      .style('transform', 'translate(5%, 15%)');
+    
+    fieldg
+      .append('text')
+      .text('Field:');
+    fieldg
+      .append('circle')
+      .attr('r', '15')
+      .style('transform', 'translate(31.5%, -1%)')
+      .attr('fill', indivPetalColors(flower_picked_data.field[0]))
+      .style('border', 'solid')
+      .attr('stroke', "black");
+    fieldg.append('text').text(flower_picked_data.field[0]).style('transform', 'translate(37%)');
+
+    var ageG = infosvg
+      .append('g')
+      .style('transform', 'translate(5%, 30%)');
+    
+    ageG
+      .append('text')
+      .text('Age:');
+
+    ageG
+      .append('path')
+      .attr('fill', 'white')
+      .attr('stroke', strokeColor)
+      .attr('stroke-width', 4)
+      .attr('d', petalPathsLegend[petalScale(flower_picked_data.ageBucket)])
+      .style('transform', 'translate(31.5%,-5%)scale(0.3)');
+    
+    ageG.append('text').text(flower_picked_data.age).style('transform', 'translate(37%)');
+    
+
+    var button = infosvg.append('g').style('transform', 'translate(7.5%, 32%)')
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (!flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(90,-50)scale(2)');
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(130,150)rotate(180)scale(2)');
+
+      button.append('text')
+        .style('transform', 'translate(20px, 55px)')
+        .text('Migrated');
+      button.append('text')
+        .style('transform', 'translate(140px, 55px)')
+        .text('Stayed');
+
+    button = infosvg.append('g').style('transform', 'translate(7.5%, 59.5%)')
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (!flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(90,-100)scale(2)');
+      button
+      .append('path')
+      .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
+      .attr('fill', function(d) {if (flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
+      .attr('stroke', "black")
+      .attr('transform', 'translate(130,100)rotate(180)scale(2)');
+
+      button.append('text')
+        .style('transform', 'translate(7px, 5px)')
+        .text('Collaborated');
+      button.append('text')
+        .style('transform', 'translate(118px, 5px)')
+        .text('Independent');
+
+    selected
+      .append('text')
+      .style('font-size', '14px')
+      .style('transform', 'translate(2%, 87%)')
+      .text("Click anywhere in the box to close, or click the flower to learn more about this laureate");
+  }
+}
+
 /*****************************************************
 ** get laureate data
 ******************************************************/
@@ -389,20 +414,6 @@ d3.json('allflowerdata.json', function(laureates) {
       }
       if (laureate.field[0] == "economic sciences")
         laureate.field[0] = "economics";
-      //Number of publications
-      // laureate.numPublications = parseInt(laureate.numPublications);
-      // if (laureate.numPublications < 10) {
-      //     laureate.numPubBucket = "0-10";
-      // }
-      // else if (laureate.numPublications < 100) {
-      //     laureate.numPubBucket = "10-100";
-      // }
-      // else if (laureate.numPublications < 1000) {
-      //     laureate.numPubBucket = "100-1000";
-      // }
-      // else {
-      //     laureate.numPubBucket = "1000+";
-      // }
 
       laureate.collaborate = parseInt(laureate.collaborate);
       laureate.mobility = parseInt(laureate.mobility);
@@ -415,34 +426,21 @@ d3.json('allflowerdata.json', function(laureates) {
   // overall flower size from rating
   var minAge = d3.min(laureates, function(d) {return d.age});
   var maxAge = d3.max(laureates, function(d) {return d.age});
-  console.log("Min age: " + minAge);
-  console.log("Max age: " + maxAge);
-  console.log(laureates.length);
-  // flowerSizeScale.domain([minRating, maxRating]);
-  // get the top 4 genres by count
-  // topFields = _.chain(laureates)
-  // 	.map('field').flatten()
-  // 	.countBy().toPairs()
-  // 	.sortBy(1).map(0)
-  // 	.takeRight(4)
-  // 	.value();
-  // topFields.push('Other');
-  //petalColors.domain(topFields);
+
   // get all the years
   var allYears = _.chain(laureates)
   	.map('year').uniq().value();
   
+
   /*****************************************************
   ** build legend
   ******************************************************/
 
   var fontSize = 12;
   var legendWidth = 1000;
-  
-  console.log(legend);
+
   // petal shapes
   var legendPetalShapes = legend.append('g')
-    // .attr('transform', 'translate(' + (legendWidth / 2) + ',0)')
     .selectAll('g')
     .data(['0-25', '25-50', '50-75', '75-100'])
     .enter().append('g')
@@ -494,10 +492,6 @@ d3.json('allflowerdata.json', function(laureates) {
     .attr('stroke-width', 4)
     .attr('d', petalPathsLegend[0])
     .attr('transform', 'scale(0.3)');
-    // .attr('transform', function(d, i) {
-    //   var x = i * (flowerSize / 6) + 100;
-    //   return 'translate(' + [x, flowerSize] + ')scale(0.5)';
-    //});
 
     legendPetalColors.append('text')
     .attr('y', flowerSize/4)
@@ -508,8 +502,6 @@ d3.json('allflowerdata.json', function(laureates) {
 
   //background colors
   var legendBgColors = legend.append('g')
-    // .attr('transform',
-   //        'translate(' + [legendWidth / 2, flowerSize * .9] + ')')
     .selectAll('g').data(["migrated"])
     .enter().append('g')
     .attr('transform', function(d, i) {
@@ -530,7 +522,6 @@ d3.json('allflowerdata.json', function(laureates) {
     .text(function(d) {return d});
 
   var legendLeaf = legend.append('g')
-    // .attr('transform', 'translate(' + (legendWidth / 2) + ',0)')
     .selectAll('g')
     .data(['shared prize'])
     .enter().append('g')
@@ -672,8 +663,7 @@ function goButton() {
 
     var size = flowers.filter((d, i) => filterFunction(d, i, true, age_vals, year_vals, fieldsInclude)).size();
     var total = flowers.size();
-    console.log("Showing: " + size);
-    console.log("Total: " + total);
+
     texthowmany.innerText = "Displaying " + size + " out of " + total + " laureates";
 
   //hide elements that were filtered out
@@ -684,8 +674,6 @@ function goButton() {
 }
 
 function drawFlowers(svg, laureates) {
-  console.log(laureates);
-  console.log(svg);
   // draw flower for each laureate
   var flowers = svg.selectAll('g.flower')
     .data(_.values(laureates)).enter()
@@ -708,7 +696,6 @@ function drawFlowers(svg, laureates) {
       // if there's only one genre, center the circle
       var cy = d.field.length === 1 ? 0 : -flowerSize / 5;
       return _.map(d.field, function(field, i) {
-        //field = _.includes(topFields, field) ? field : 'Other';
         return {
           cy: cy,
           scale: flowerSizeScale,
@@ -746,7 +733,6 @@ function drawFlowers(svg, laureates) {
     .attr('stroke', strokeColor)
     .attr('stroke-width', function(d) {
       return 2 / d.scale;
-    //}).attr('fill', function(d, i) { if (i > 3) return "None"; return indivPetalColors(i) ; })
     }).attr('fill', function(d) {
         return indivPetalColors(d.field)
     })
@@ -757,20 +743,6 @@ function drawFlowers(svg, laureates) {
       return 'translate(' + [cx, cy] +
         ')rotate(' + [d.angle] + ')';
     });
-    // }).enter().append('circle')
-    //.classed('petal', true)
-    //.attr('stroke', strokeColor)
-    //.attr('stroke-width', function(d) {
-    //  return 2 / d.scale;
-    // .attr('fill', 'yellow')
-    // .attr('r', 20)
-    // //.attr('d', function(d) {return d.path.join(' ')})
-    // .attr('transform', function(d, i) {
-    //   var cx = flowerSize / 2 / d.scale - (i*20);
-    //   var cy = flowerSize / 2 / d.scale + (i*20);
-    //   return 'translate(' + [cx, cy] +
-    //     ')rotate(' + [d.angle] + ')';
-    // });
   
   // draw the leaves
   flowers.selectAll('path.leaf')
@@ -802,29 +774,17 @@ function drawFlowers(svg, laureates) {
     });
     
     flowers.append('text')
-    // .classed('title', true)
-     //.style('position', 'absolute')
      .style('font-size', '50px')
      .style('text-anchor', 'middle')
-     // .style('padding', '0 ' + padding + 'px')
-     // .style('width', flowerSize - 2 * padding + 'px')
-     // .style('left', function(d, i) {
-     //   return (i % 4) * flowerSize + 'px';
-     // }).style('top', function(d, i) {
-     //   return Math.floor(i / 4) * flowerSize + (flowerSize * .75) + 'px';
-     //  })
      .attr('transform', function(d) {
       var cx = flowerSize / 2 / flowerSizeScale;
       var cy = flowerSize / 2 / flowerSizeScale + 200;
       return 'translate(' + [cx, cy] + ')';
     })
-      // .attr('text-anchor', 'middle')
-      // .attr('x', '50')
       .text(function(d) { if (d.name.length > 30) return d.name.substr(0,27).concat('...'); return d.name} );
 
     flowers.append('text')
     .style('font-size', '50px')
-    // .style('text-anchor', 'middle')
     .append('textPath')
     .attr('xlink:href', '#curve')
     .text(function(d) { return d.year});
