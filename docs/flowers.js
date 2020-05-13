@@ -679,7 +679,7 @@ function filterFunction(d, i, include, age_vals, pub_vals, year_vals, fieldsIncl
 
 function goButton() {
   //Collapse menu
-  var coll = document.getElementsByClassName("collapsible");
+  var coll = document.getElementsByClassName("arrangeGarden");
   var i;
 
   for (i = 0; i < coll.length; i++) {
