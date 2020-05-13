@@ -1,11 +1,13 @@
 # FP-The-Stories-of-High-Achievers
 **Lisa Baer, Ameneh Fadaie, Austin Parker**
 
-[Download our Final Paper](https://www.example.com)
+[Download our Final Paper](final_paper.pdf)
 
 [Watch our Video](https://www.example.com)
 
-[Application Homepage](https://www.example.com)
+[Application Homepage (MIT)](https://github.mit.edu/pages/6894-sp20/FP-The-Stories-of-High-Achievers)
+
+[Public Application Homepage (public)](https://github.mit.edu/pages/6894-sp20/FP-The-Stories-of-High-Achievers)
 
 ## Summary Image
 
