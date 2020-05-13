@@ -8,7 +8,7 @@ We started to brainstorm about the ideas of how to tell the stories of Nobel pri
 - Visualization in Observable (D3 and Vega-Lite) for the basic idea
 - Creating scenarios and stories for data visulization
 - Visualization design 
-- Paper and presentation
+- Paper and presentation file
 
 ### Lisa
 
