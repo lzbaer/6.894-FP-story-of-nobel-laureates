@@ -13,10 +13,10 @@ We started to brainstorm about the ideas of how to tell the stories of Nobel pri
 - Paper and presentation file
 
 ### Lisa
-- Wrote Python scripts to collect data from the Nobel Laureate REST API (https://www.nobelprize.org/about/developer-zone-2/), join data with publication records dataset (https://www.nature.com/articles/s41597-019-0033-6), and filter out laureates with missing data
+- Wrote Python scripts to collect data from the [Nobel Laureate REST API](https://www.nobelprize.org/about/developer-zone-2/), joined data with the [publication records dataset](https://www.nature.com/articles/s41597-019-0033-6), and filtered out laureates with missing data
 - Implemented initial chord diagram using D3 and Python to experiment with aggregate view of laureates and countries (not included in final deployed application). Used Python to determine top countries and resolve slight differences in country names
-- Designed and implemented flower visualization and scrollytelling using D3 and javascript. Designed and implemented interactive components and animations
-- Validated the number of publication records displayed in the application using the Microsoft Academic database (https://academic.microsoft.com/home)
+- Designed and implemented individual flower + flower layout visualization and scrollytelling pages using D3 and Javascript. Designed and implemented interactive components and animations and how pages would link together.
+- Validated the number of publication records displayed in the application using the [Microsoft Academic database](https://academic.microsoft.com/home)
 - Final paper
 
 ### Austin
