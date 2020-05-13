@@ -45,6 +45,7 @@ function handleClick(d, i, index) {
       .attr('height', '90%')
       .style('fill', '#E8E8E8')
       .style('border', 'solid')
+      .style('cursor', 'pointer')
       .style('stroke', 'black')
       .style('transform', 'translate(0px, 5px)')
       .on('click', function(d) {
@@ -63,6 +64,7 @@ function handleClick(d, i, index) {
     flowerdiv
       .append('g')
       .style('transform', 'translate(-10%,-15%)scale(0.5)')
+      .style('cursor', 'pointer')
       .attr('id', 'test')
       .on('click', function(d) { return window.open('http://nobelprize.org/prizes/' + flower_picked_data.field[0] +  '/' + flower_picked_data.year + '/' + flower_picked_data.lastName) } )
       .html(children);
