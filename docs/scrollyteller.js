@@ -45,7 +45,7 @@ var petalScale = d3.scaleOrdinal()
   .range(_.range(4));
 //var petalColors = d3.scaleOrdinal()
   //.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
-var petalColors = ["#ffda47", "#b187ff"];
+var petalColors = ["none", "#6e6b6a"];
 var indivPetalColors = d3.scaleOrdinal()
   .domain(["chemistry", "medicine", "physics"])
   .range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);

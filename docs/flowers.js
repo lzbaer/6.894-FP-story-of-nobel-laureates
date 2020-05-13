@@ -29,7 +29,7 @@ function handleClick(d, i, index) {
     var flower_picked_data = flower_picked.data()[0]
     var selected = d3.select('#flowerdetails').append('svg')
       .attr('width', '100%')
-      .attr('height', 'auto')
+      .attr('height', '100%')
       .style('margin-top', '0%')
       //.attr('viewbox', '0 0 20 10')
       // .style('margin-left', '5%')
@@ -58,9 +58,9 @@ function handleClick(d, i, index) {
       .style('transform', 'translate(5%, 10%)');
 
     var flowerdiv = selected.append('svg')
-      .attr('x', '50%')
-      .attr('y', '100%')
-      .style('transform', 'translate(-50%,-100%)');
+      //.attr('x', '50%')
+      //.attr('y', '100%')
+      //.style('transform', 'translate(-50%,-100%)');
 
     flowerdiv
       .append('g')
@@ -74,10 +74,9 @@ function handleClick(d, i, index) {
       .select('text').remove();
 
     var infosvg = selected.append('svg')
-      .attr('x', '50%')
-      .attr('y', '100%')
-      .style('width', '50%')
-      .style('transform', 'translate(-10%,-99%)');
+      .append('g')
+      .attr('width', '50%')
+      .style('transform', 'translate(40%)');
 
     infosvg
       .append('text')
@@ -88,13 +87,13 @@ function handleClick(d, i, index) {
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (!flower_picked_data.mobility) return "#4EDFA5"; else return 'white'})
+      .attr('fill', function(d) {if (!flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
       .attr('stroke', "black")
       .attr('transform', 'translate(100,-50)scale(2)');
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (flower_picked_data.mobility) return "#4EDFA5"; else return 'white'})
+      .attr('fill', function(d) {if (flower_picked_data.mobility) return "#6e6b6a"; else return 'white'})
       .attr('stroke', "black")
       .attr('transform', 'translate(120,150)rotate(180)scale(2)');
 
@@ -114,13 +113,13 @@ function handleClick(d, i, index) {
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (!flower_picked_data.collaborate) return "#4EDFA5"; else return 'white'})
+      .attr('fill', function(d) {if (!flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
       .attr('stroke', "black")
       .attr('transform', 'translate(100,-100)scale(2)');
       button
       .append('path')
       .attr("d", "M10,40 h50 q5,0 5,5 v10 q0,5 -5,5 h-50 z")
-      .attr('fill', function(d) {if (flower_picked_data.collaborate) return "#4EDFA5"; else return 'white'})
+      .attr('fill', function(d) {if (flower_picked_data.collaborate) return "#4AB56D"; else return 'white'})
       .attr('stroke', "black")
       .attr('transform', 'translate(120,100)rotate(180)scale(2)');
 
@@ -215,8 +214,16 @@ for (i = 0; i < coll.length; i++) {
     } else {
       content.style.maxHeight = (2*content.scrollHeight) + "px";
       if (content.id == "legend") {
-        $("#texthowmany").css("transform", "translate(210px, 0px)");
-        $("#flowerField").css("transform", "translate(150px, 10px)");
+        console.log($(window).width());
+        if ($(window).width() > 980) {
+          $("#texthowmany").css("transform", "translate(10%, 0px)");
+          $("#flowerField").css("transform", "translate(10%, 10px)");
+        
+        }
+        else {
+          $("#texthowmany").css("transform", "translate(200px, 0px)");
+          $("#flowerField").css("transform", "translate(200px, 10px)");
+        }
         content.style.border = "solid";
         $(".fixed").css('z-index', 1);
       }
@@ -254,13 +261,17 @@ $("#flat-slider-vertical-2")
   })
   .slider("float");
 
+$(window).scroll(function(){
+  $('#legendContainer').css('left',-$(window).scrollLeft());
+});
+
 var strokeColor = '#444';
 var flowerSize = 200;
 var padding = 10;
 var legend = d3.select('.legend-content svg');
 
 var svg = d3.select('.content svg')
-	.style('left', '20px')
+  .attr('id', 'flowerFieldSVG')
   .append('g')
   .attr('id', 'flowerField')
   .attr('style', 'transition:all 2s')
@@ -331,7 +342,7 @@ var petalScale = d3.scaleOrdinal()
 	.range(_.range(4));
 //var petalColors = d3.scaleOrdinal()
 	//.range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
-var petalColors = ["#ffda47", "#b187ff"];
+var petalColors = ["none", "#6e6b6a"];
 var indivPetalColors = d3.scaleOrdinal()
   .range(['#FFB09E', '#CBF2BD', '#AFE9FF', '#FFC8F0', '#FFF2B4']);
 
@@ -499,15 +510,15 @@ d3.json('flowerdata.json', function(laureates) {
   var legendBgColors = legend.append('g')
     // .attr('transform',
    //        'translate(' + [legendWidth / 2, flowerSize * .9] + ')')
-    .selectAll('g').data(["same country", "migrated"])
+    .selectAll('g').data(["migrated"])
     .enter().append('g')
     .attr('transform', function(d, i) {
-      var x = i * (flowerSize / 2-10) + 50;
+      var x = i * (flowerSize / 2-10) + 100;
       return 'translate(' + [x, flowerSize/4 + 130] + ')';
     });
     legendBgColors.append('circle')
     .attr('r', flowerSize / 8)
-    .attr('fill', function(d, i) {return petalColors[i]})
+    .attr('fill', function(d, i) {return petalColors[i+1]})
     .style("filter", "url(#motionFilter)")
     .attr("transform", "scale(0.5)");
   
@@ -543,7 +554,7 @@ d3.json('flowerdata.json', function(laureates) {
     }).enter().append('path')
     .attr('stroke', strokeColor)
     .attr('stroke-width', 2 / .3)
-    .attr('fill', indivPetalColors("chemistry"))
+    .attr('fill', "white")
     .attr('d', function(d) {return d.path.join(' ')})
     .attr('transform', function(d) {
       return 'rotate(' + [d.angle] + ')';
@@ -571,7 +582,7 @@ d3.json('flowerdata.json', function(laureates) {
     .data(['shared prize'])
     .enter().append('g')
     .attr('transform', function(d, i) {
-      var x = 2 * (flowerSize / 2) + 30;
+      var x = 185;
       return 'translate(' + [x, flowerSize/4 + 140] + ')'
     });
   legendLeaf.selectAll('path')
