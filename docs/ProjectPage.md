@@ -12,12 +12,7 @@
 ## Summary Image
 
 ## Abstract
-How do we frame the stories of high- achievers as a way to inspire innovation as opposed to alienating the viewer. 
-We will visualize nobel prize winners from multiple fields and highlight their backgrounds to show what led them to that point.
-Expanding from the visualization of an individual Nobel Prize winner to the visualization of the many winners throughout the 
-years we will show the diversity of the many winners and the many places they came from.  Additionally, this will highlight
-many accomplishments of the various winners and give viewers an outlet to learn more about any Nobel Prize Winner that piques 
-their interest.
+Through our visualization, we wanted to explore the common environment and features that facilitate scientific creativity and increase the academic achievements of researchers. The best examples to illustrate this is by looking at Nobel laureates to see how and in what conditions they won their awards. We visualize information about the laureate fields, the age they won the prize, the number of publications they have, whether they stayed in their born country or they moved to other countries, and whether they collaborated with other researchers or if they worked alone. We illustrate this data in the shape of a flower and each flower represents one laureate. We used scrolly telling to teach our encodings to our users step by step, and then after learning about that, they can explore our garden. We used individual graphs for each laureate to humanize the data and engage interactivity. Also, users can explore each story separately and learn about each laureate.
 
 ## Acknowledgements
 Code was adapted from these sources:
