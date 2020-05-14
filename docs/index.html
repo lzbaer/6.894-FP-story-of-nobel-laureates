@@ -61,12 +61,12 @@
     margin: 0;
     padding: 0;
     position: absolute;
-    height: 100%;
     line-height: 1.5;
     left: 500px;
   }
   .container div {
     height: 100%;
+    /*min-height:540px;*/
     display: block;
     padding: 0 45px;
   }
@@ -88,13 +88,14 @@
   <a href="README.html" style="display:inline-block;">Visit our Project Page</a>
 </head>
 
-<body>
+<body style="min-width:950px; min-height:800px">
   <h1 class='header'> Nobel Flowers </h1>
   <div id="graphic">
   <div class="container">
     <div id="div1">
       <h2>When you think of a Nobel Prize Winner who do you visualize? what type of person appears in your head?</h2>
       <h2>What are common conditions and environments that may facilitate <strong> scientific creativity</strong>?</h2>
+      <p></p>
       <h2>Let's begin by examining <strong>David J. Thouless</strong>, a 2016 nobel laureate awarded for his research in <italic>"theoretical discoveries of topological phase transitions and topological phases of matter"</italic>.</h2>
     </div>
     <div id="div1.5">
@@ -103,42 +104,34 @@
       <h2>The <strong>background color</strong> represents <strong>mobility</strong>, which we define as whether the laureate won the award while researching in a different country from which they were born.</h2>
       <p></p>
       <h2>Thouless was born in the United Kingdom, and won the Nobel Prize while working at the University of Washington in Seattle, WA. This means that Thouless migrated. </h2>
-      <p></p>
     </div>
-
-
     <div id="div2">
       <h2>How old is a Nobel Prize Winner?  Did they make their contribution to humanity while they were young?  Or did it take years of hard work?</h2>
       <p></p>
       <h2>The <strong>shape</strong> of the petal represents the <strong>age</strong> of the laureate when they received the award. We divide age groups into four buckets: 0-25 years old, 25-50 years old, 50-75 years old, and 75-100 years old. The four petal shapes become increasingly pointy as the age bracket it represents increases. </h2>
-      <h2>Thouless was <strong> 82 years old</strong> when he won the Nobel Prize, so he belongs in the 75-100 year age bucket, represented by the pointiest petal shape. </h2>
       <p></p>
+      <h2>Thouless was <strong> 82 years old</strong> when he won the Nobel Prize, so he belongs in the 75-100 year age bucket, represented by the pointiest petal shape. </h2>
     </div>
-
-
-
-
     <div id="div3">
       <h2>In what category did they win their award?  There are many categories to contribute to: Chemistry, Medicine, Literature, Peace, Physics, and Economics.</h2>
       <p></p>
       <h2>The <strong>color</strong> of the petal represents the <strong>field</strong> in which the nobel laureate won the prize.</h2>
-      <h2>Thouless won the Nobel Prize in <strong>Physics</strong>. </h2>
+      <p></p>
+      <h2>Thouless won the Nobel Prize in <strong>Physics</strong>.</h2>
       <p></p>
     </div>
-
     <div id="div4">
       <h2>What contribution did this winner make to their field?  Was it a single act or near countless contributions?</h2>
       <p></p>
       <h2>The <strong>number of petals</strong> represents the <strong>number of publications</strong> the laureate has published up until receiving the award.The number of petals range from 3 to 6 and the addition of a petal increases the number of publications logarithmically.</h2>
+      <p></p>
       <h2>Thouless published <strong>143</strong> publications, so his flower has <strong>5</strong> petals. </h2>
     </div>
-
-
-
     <div id="div6">
       <h2> Did the winner get there by themselves or was it only possible through collaboration with others?</h2>
       <p></p>
       <h2><strong>Leaves</strong> represent <strong>collaboration</strong>, which we define as whether the laureate shared the prize. </h2>
+      <p></p>
       <h2>Thouless shared his award with <strong> F. Duncan M. Haldane</strong> and <strong>J. Michael Kosterlitz</strong>.</h2>
     </div>
     <!--
@@ -149,6 +142,7 @@
   -->
     <div id="div8">
       <h2> If you'd like to learn more about a laureate, you can <strong>click on their flower.</strong></h2>
+      <p></p>
       <h2>Click the arrow to explore <strong>the flower field</strong> and learn about other nobel laureates and their varied backgrounds.</h2>
       <!-- image src: https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngio.com%2Fimages%2Fpng-a1224319.html&psig=AOvVaw0gc6fCdwQPqcB9VQFGZTCi&ust=1588622230760000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMjF74-9mOkCFQAAAAAdAAAAABAD -->
       <img style="cursor:pointer;" src="arrow.png" onclick="window.open('flowers.html')"></img>
