@@ -20,4 +20,6 @@ We started to brainstorm about the ideas of how to tell the stories of Nobel pri
 - Final paper
 
 ### Austin
-
+- Developed WordCloud implementation to. viualize motivation for Nobel Laureates awards (unused)
+- Presentation
+- Edits to ScrollyTelling for Content and Formatting
